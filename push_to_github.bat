@@ -1,5 +1,6 @@
 @echo off
 setlocal
+set "PATH=%LOCALAPPDATA%\Programs\Git\cmd;%PATH%"
 title Sanjeevani - Push to GitHub
 cd /d "%~dp0"
 echo ======================================================================
