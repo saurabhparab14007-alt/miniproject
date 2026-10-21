@@ -1,0 +1,32 @@
+[build]
+  publish = "frontend"
+
+[[redirects]]
+  from = "/doctor"
+  to = "/doctor_portal.html"
+  status = 200
+
+[[redirects]]
+  from = "/patient"
+  to = "/patient_portal.html"
+  status = 200
+
+[[redirects]]
+  from = "/hospital"
+  to = "/hospital_portal.html"
+  status = 200
+
+[[redirects]]
+  from = "/asha"
+  to = "/asha_worker.html"
+  status = 200
+
+[[redirects]]
+  from = "/village-board"
+  to = "/village_dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/keypad"
+  to = "/keypad_simulator.html"
+  status = 200
