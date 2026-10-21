@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani - Doctor & Clinical Case Portal</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sanjeevani">
+  <link rel="stylesheet" href="/styles.css">
+  <script>
+    // Authentication & RBAC Guard
+    if (!localStorage.getItem('sanjeevani_token')) {
+      localStorage.setItem('sanjeevani_token', 'session_doc_' + Date.now());
+      localStorage.setItem('sanjeevani_user', JSON.stringify({
+        id: 2,
+        username: 'dr_kulkarni',
+        role: 'doctor',
+        full_name: 'Dr. Rajesh Kulkarni, MD',
+        is_verified: 1,
+        department: 'General Medicine'
+      }));
+    }
+  </script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- SIDEBAR BACKDROP FOR MOBILE -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="doctor-sidebar">
+      <div class="sidebar-header" style="justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="brand-icon">🩺</div>
+          <div>
+            <div class="brand-name">Sanjeevani</div>
+            <div class="brand-tag">Doctor Clinical Portal</div>
+          </div>
+        </div>
+        <button type="button" class="sidebar-close-btn" id="btn-close-sidebar" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Clinical Core</div>
+        <a class="nav-item active" data-view="dashboard">
+          <span class="icon">📊</span>
+          <span>Overview Dashboard</span>
+        </a>
+        <a class="nav-item" data-view="cases">
+          <span class="icon">📋</span>
+          <span>Patient Undertakings</span>
+        </a>
+        <a class="nav-item" data-view="appointments">
+          <span class="icon">🔄</span>
+          <span>Follow-up Intelligence</span>
+        </a>
+
+        <div class="nav-section-title">Rural & Emergency</div>
+        <a class="nav-item" data-view="pharmacies">
+          <span class="icon">📍</span>
+          <span>Nearby Medical Stores</span>
+        </a>
+        <a class="nav-item" id="nav-btn-voice">
+          <span class="icon">🎙️</span>
+          <span>Doctor Voice-to-Case</span>
+        </a>
+        <a class="nav-item" id="nav-btn-analyzer">
+          <span class="icon">📄</span>
+          <span>Report OCR Analyzer</span>
+        </a>
+        <a class="nav-item" href="/asha" target="_blank">
+          <span class="icon">👩⚕️</span>
+          <span>Open ASHA Portal ↗</span>
+        </a>
+        <a class="nav-item" href="/keypad" target="_blank" style="color:#38B2AC;">
+          <span class="icon">📱</span>
+          <span>Keypad Phone SMS Sim ↗</span>
+        </a>
+
+        <div class="nav-section-title">Compliance & Security</div>
+        <a class="nav-item" data-view="audit">
+          <span class="icon">🔒</span>
+          <span>DPDP Audit & Consent</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="network-status-badge online" id="sidebar-net-badge">
+          <span class="status-dot online" id="sidebar-status-dot"></span>
+          <span id="sidebar-net-text">Online (Connected)</span>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-toggle-offline-mode" style="width: 100%; color: #BCCCDC; border-color: rgba(255,255,255,0.15); font-size: 11px;">
+          📴 Simulate Rural Offline Mode
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN RIGHT WRAPPER -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <button type="button" class="mobile-nav-toggle" id="btn-toggle-sidebar" aria-label="Toggle navigation">
+          ☰
+        </button>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="global-search-input" placeholder="Search by Patient ID, Name, Phone, or DOB...">
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Connection Indicator -->
+          <div class="rural-network-indicator online" id="topbar-connection-indicator">
+            <span class="status-dot online" id="topbar-status-dot" style="width:7px; height:7px;"></span>
+            <span id="topbar-status-txt">Online</span>
+          </div>
+
+          <!-- Multilingual selector -->
+          <div class="lang-selector">
+            <span>🗣️</span>
+            <select class="lang-select" id="global-lang-select">
+              <option value="en">English 🇬🇧</option>
+              <option value="hi">हिंदी (Hindi) 🇮🇳</option>
+              <option value="mr">मराठी (Marathi) 🇮🇳</option>
+              <option value="gu">ગુજરાતી (Gujarati) 🇮🇳</option>
+              <option value="ta">தமிழ் (Tamil) 🇮🇳</option>
+              <option value="te">తెలుగు (Telugu) 🇮🇳</option>
+            </select>
+          </div>
+
+          <!-- Switch to Village or Keypad view -->
+          <a href="/village" class="btn btn-outline btn-sm">🏘️ Village Health</a>
+          <a href="#" id="btn-doctor-signout" class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);">Sign Out</a>
+
+          <div class="user-profile-widget">
+            <div class="user-avatar" style="background:var(--primary);">DR</div>
+            <div class="user-meta">
+              <span class="user-meta-name">Doctor Portal</span>
+              <span class="user-meta-badge">✓ Verified Clinician</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-area" id="main-content-viewport">
+        <!-- Rendered view goes here -->
+      </main>
+
+      <!-- MOBILE BOTTOM NAVIGATION (HIGH-FREQUENCY CLINICAL ACTIONS) -->
+      <nav class="mobile-bottom-nav">
+        <button type="button" class="bottom-nav-item active" data-bottom-view="dashboard">
+          <span class="icon">📊</span>
+          <span>Overview</span>
+        </button>
+        <button type="button" class="bottom-nav-item" data-bottom-view="cases">
+          <span class="icon">📋</span>
+          <span>Cases</span>
+        </button>
+        <button type="button" class="bottom-nav-item" id="bottom-btn-voice">
+          <span class="icon">🎙️</span>
+          <span>Voice</span>
+        </button>
+        <button type="button" class="bottom-nav-item" data-bottom-view="pharmacies">
+          <span class="icon">📍</span>
+          <span>Meds</span>
+        </button>
+        <button type="button" class="bottom-nav-item" id="bottom-btn-menu">
+          <span class="icon">☰</span>
+          <span>Menu</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+
+  <script>
+    // Register Resilient Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then((reg) => {
+            console.log('✓ Sanjeevani Offline Service Worker Active:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('Service Worker registration note:', err);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>

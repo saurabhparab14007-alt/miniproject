@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani - ASHA Rural Health Worker Portal</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sanjeevani">
+  <link rel="stylesheet" href="/styles.css">
+  <script>
+    if (!localStorage.getItem('sanjeevani_token')) {
+      localStorage.setItem('sanjeevani_token', 'session_asha_' + Date.now());
+      localStorage.setItem('sanjeevani_user', JSON.stringify({
+        id: 14,
+        username: 'asha_sunita',
+        role: 'asha_worker',
+        full_name: 'Sunita Patil (ASHA)',
+        is_verified: 1
+      }));
+    }
+  </script>
+  <style>
+    /* ASHA Portal: Large touch targets, high contrast, minimal text, mobile-friendly */
+    .asha-top-header {
+      background: linear-gradient(135deg, #087E8B, #38B2AC);
+      color: #FFFFFF;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .asha-profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 6px 14px;
+      border-radius: 30px;
+    }
+
+    .asha-main-body {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* Today's Work Large Touch Cards */
+    .work-touch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .work-touch-tile {
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .work-touch-tile:hover, .work-touch-tile.active {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background: #F5FAFC;
+    }
+
+    .tile-icon {
+      font-size: 38px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .tile-number {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .tile-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Family Health Graph Visualizer */
+    .household-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .household-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .family-members-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .member-bubble {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .member-bubble.high-risk {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    /* TTS Audio Button */
+    .btn-speak {
+      background: #E6FFFA;
+      color: var(--primary);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+  </style>
+</head>
+<body style="background:#F1F5F9; display:block;">
+
+  <!-- ASHA HEADER -->
+  <header class="asha-top-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:28px;">👩⚕️</span>
+      <div>
+        <h1 style="font-size:20px; font-weight:800; margin:0;">आशा कार्यकर्ता पोर्टल (ASHA Portal)</h1>
+        <small style="opacity:0.9;">शिवाजी नगर उप-केंद्र (Shivaji Nagar Sub-Centre)</small>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+      <a href="/keypad" target="_blank" class="btn btn-sm" style="background:#0B1F33; color:#fff; font-weight:700;">
+        📱 Open Keypad Simulator ↗
+      </a>
+      <a href="/village" class="btn btn-sm" style="background:#FFFFFF; color:var(--primary); font-weight:700;">
+        🏘️ Village Community Board
+      </a>
+      <div class="asha-profile-pill">
+        <span style="font-weight:700;">सुनीता ताई पाटील</span>
+        <span style="font-size:11px; background:rgba(0,0,0,0.2); padding:2px 8px; border-radius:12px;">ASHA #042</span>
+      </div>
+      <button id="btn-asha-signout" class="btn btn-sm" style="background:rgba(211,47,47,0.25); border:1px solid rgba(255,255,255,0.4); color:#fff; font-weight:700; cursor:pointer;">
+        🚪 Log Out
+      </button>
+    </div>
+  </header>
+
+  <div class="asha-main-body">
+    <!-- AUDIO VOICE GUIDE FOR LOW-LITERACY PATIENTS -->
+    <div style="background:#FFFFFF; border:1px solid var(--accent); border-radius:10px; padding:12px 18px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:22px;">🔊</span>
+        <div>
+          <strong style="color:var(--text-main); font-size:13px;">कमी साक्षरतेसाठी ऑडिओ मार्गदर्शक (Text-to-Speech Voice Guide Active)</strong>
+          <div style="font-size:11.5px; color:var(--text-secondary);">कोणत्याही कार्डावर क्लिक करून आवाज ऐका</div>
+        </div>
+      </div>
+      <button class="btn btn-speak" id="btn-play-welcome-speech">
+        🔊 संपूर्ण आजचे कार्य ऐका (Listen Today's Work)
+      </button>
+    </div>
+
+    <!-- TODAY'S WORK - BIG TOUCH TILES -->
+    <h2 style="font-size:18px; font-weight:800; color:var(--text-main); margin-bottom:14px;">
+      📅 आजचे कार्य (Today's Work)
+    </h2>
+
+    <div class="work-touch-grid">
+      <!-- Tile 1: Home Visits -->
+      <div class="work-touch-tile active" id="tile-home-visits">
+        <span class="tile-icon">🏡</span>
+        <div class="tile-number" id="count-visits">3</div>
+        <div class="tile-label">घरोघरी भेटी (Home Visits)</div>
+        <small style="color:var(--text-secondary); font-size:11px;">गरोदर माता व आजारी रुग्ण</small>
+      </div>
+
+      <!-- Tile 2: Pending Follow-ups -->
+      <div class="work-touch-tile" id="tile-followups">
+        <span class="tile-icon">🔄</span>
+        <div class="tile-number" style="color:var(--warning);" id="count-followups">4</div>
+        <div class="tile-label">पुढील तपासणी (Follow-ups Due)</div>
+        <small style="color:var(--text-secondary); font-size:11px;">दवाखाना पुनर्तपासणी</small>
+      </div>
+
+      <!-- Tile 3: Vaccinations Due -->
+      <div class="work-touch-tile" id="tile-vaccines">
+        <span class="tile-icon">💉</span>
+        <div class="tile-number" style="color:var(--danger);" id="count-vaccines">2</div>
+        <div class="tile-label">लसीकरण बाकी (Vaccinations)</div>
+        <small style="color:var(--text-secondary); font-size:11px;">लहान बालके (0-2 वर्षे)</small>
+      </div>
+
+      <!-- Tile 4: High-Priority Cases -->
+      <div class="work-touch-tile" id="tile-priority">
+        <span class="tile-icon">🚨</span>
+        <div class="tile-number" style="color:var(--danger);" id="count-priority">3</div>
+        <div class="tile-label">तातडीचे रुग्ण (High Priority)</div>
+        <small style="color:var(--text-secondary); font-size:11px;">उच्च रक्तदाब / दमा / ANC</small>
+      </div>
+    </div>
+
+    <!-- TAB 1 CONTENT: PATIENTS TO VISIT QUEUE -->
+    <div class="card" id="section-visits">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🏡</span> आज भेट देण्याची यादी (Patients to Visit Today)
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-listen-visits-list">🔊 यादी ऐका</button>
+      </div>
+      <div id="visits-list-container">Loading visits...</div>
+    </div>
+
+    <!-- TAB 2: FAMILY HEALTH GRAPH -->
+    <div class="card" style="margin-top:24px;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">👨👩👧 कौटुंबिक आरोग्य आलेख (Family Health Graph)</div>
+          <small style="color:var(--text-secondary);">गाव: शिवाजी नगर (एकत्रित कुटुंब आरोग्य निरीक्षण)</small>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-refresh-families">🔄 अपडेट करा</button>
+      </div>
+      <div id="family-graph-container">Loading family health hierarchy...</div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/asha_worker.js"></script>
+
+  <script>
+    // Register Resilient Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then((reg) => {
+            console.log('✓ Sanjeevani Offline Service Worker Active:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('Service Worker registration note:', err);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>

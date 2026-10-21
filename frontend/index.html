@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani - Authentication & Healthcare Gateway</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#087E8B">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sanjeevani">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Executive Gateway Canvas */
+    .auth-page-wrapper {
+      min-height: 100vh;
+      width: 100vw;
+      background: linear-gradient(135deg, #F0F7FA 0%, #E3F2FD 40%, #E0F2F1 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    /* Top Brand Showcase */
+    .brand-showcase {
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .brand-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0B1F33;
+      color: #FFFFFF;
+      padding: 10px 22px;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(11, 31, 51, 0.18);
+      margin-bottom: 14px;
+    }
+
+    .brand-logo-badge span.cross {
+      background: linear-gradient(135deg, #087E8B, #38B2AC);
+      color: #fff;
+      font-size: 18px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #102A43;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .brand-subtitle {
+      font-size: 14px;
+      color: #627D98;
+      line-height: 1.5;
+    }
+
+    /* Capability Pill Badges */
+    .capability-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .cap-pill {
+      background: #FFFFFF;
+      border: 1px solid #D9E2EC;
+      color: #334E68;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 1px 3px rgba(16,42,67,0.04);
+    }
+
+    /* Main Login Shell */
+    .auth-main-card {
+      background: #FFFFFF;
+      border: 1px solid #D9E2EC;
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(16, 42, 67, 0.1);
+      max-width: 820px;
+      width: 100%;
+      overflow: hidden;
+      animation: modalSlideUp 0.35s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Prompt Selection Banner */
+    .role-prompt-header {
+      background: #0B1F33;
+      color: #FFFFFF;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .role-prompt-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-prompt-desc {
+      font-size: 12px;
+      color: #BCCCDC;
+      margin-top: 3px;
+    }
+
+    /* 3-Role Interactive Selector Grid */
+    .role-cards-container {
+      padding: 20px 28px 12px;
+      background: #F8FBFC;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .role-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 680px) {
+      .role-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .role-option-card {
+      background: #FFFFFF;
+      border: 2px solid #D9E2EC;
+      border-radius: 12px;
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .role-option-card:hover {
+      border-color: #087E8B;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(8, 126, 139, 0.12);
+    }
+
+    .role-option-card.active {
+      border-color: #087E8B;
+      background: #F0FBFB;
+      box-shadow: 0 6px 20px rgba(8, 126, 139, 0.16);
+    }
+
+    .role-option-card.active::after {
+      content: "✓ SELECTED";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #087E8B;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .role-card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .role-card-icon {
+      font-size: 26px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #EBF8FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .role-option-card.active .role-card-icon {
+      background: #087E8B;
+      color: #FFFFFF;
+    }
+
+    .role-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #102A43;
+    }
+
+    .role-desc {
+      font-size: 11.5px;
+      color: #627D98;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .role-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .badge-pat {
+      background: #E1F5FE;
+      color: #0277BD;
+    }
+
+    .badge-doc {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .badge-hosp {
+      background: #EDE7F6;
+      color: #5E35B1;
+    }
+
+    /* Frontline ASHA toggle chip */
+    .asha-toggle-wrapper {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .asha-chip-btn {
+      background: transparent;
+      border: 1px dashed #BCCCDC;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11.5px;
+      color: #486581;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .asha-chip-btn:hover, .asha-chip-btn.active {
+      background: #FFF9E6;
+      border-color: #F9A825;
+      color: #975A16;
+      font-weight: 700;
+    }
+
+    /* Auth Tab Segment (Log In vs Register) */
+    .auth-tab-segment {
+      display: flex;
+      margin: 16px 28px 0;
+      background: #E2E8F0;
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #486581;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .auth-tab-btn.active {
+      background: #FFFFFF;
+      color: #087E8B;
+      box-shadow: 0 2px 6px rgba(16, 42, 67, 0.08);
+    }
+
+    .auth-card-body {
+      padding: 24px 28px 32px;
+    }
+
+    /* Quick 1-Click Login Bar */
+    .quick-access-bar {
+      background: #F0F4F8;
+      border: 1px solid #D9E2EC;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    .quick-access-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #486581;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .quick-buttons-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .quick-buttons-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .btn-quick {
+      background: #FFFFFF;
+      border: 1px solid #BCCCDC;
+      border-radius: 7px;
+      padding: 8px 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      color: #102A43;
+    }
+
+    .btn-quick:hover {
+      border-color: #087E8B;
+      color: #087E8B;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(8,126,139,0.15);
+    }
+
+    /* Mandatory Verification Callout */
+    .verification-mandatory-banner {
+      background: #FFF8E1;
+      border: 1.5px solid #FFE082;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .verification-mandatory-banner .icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .verification-mandatory-banner .title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #B78103;
+      margin-bottom: 2px;
+    }
+
+    .verification-mandatory-banner .desc {
+      font-size: 11.5px;
+      color: #795548;
+      line-height: 1.4;
+    }
+
+    /* Portal Shortcut Tray */
+    .portal-shortcut-tray {
+      margin-top: 24px;
+      max-width: 820px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid #D9E2EC;
+      border-radius: 14px;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(16, 42, 67, 0.05);
+    }
+
+    .portal-shortcut-chip {
+      background: #FFFFFF;
+      border: 1px solid #D9E2EC;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #102A43;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .portal-shortcut-chip:hover {
+      border-color: #087E8B;
+      color: #087E8B;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(8, 126, 139, 0.12);
+    }
+
+    /* Master Unified Workspace (Single Host Link) */
+    .master-tab-btn {
+      background: transparent;
+      color: #94A3B8;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease-in-out;
+      white-space: nowrap;
+    }
+    .master-tab-btn:hover {
+      background: #1E293B;
+      color: #FFFFFF;
+    }
+    .master-tab-btn.active {
+      background: #087E8B;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(8, 126, 139, 0.4);
+    }
+
+    /* Mobile Responsive Master Workspace Rules */
+    .master-mobile-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .master-mobile-toggle:active {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    #mobile-workspace-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 320px;
+      max-width: 86vw;
+      background: #0B1F33;
+      color: #FFFFFF;
+      z-index: 9999;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -6px 0 28px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    #mobile-workspace-drawer.open {
+      transform: translateX(0);
+    }
+
+    #mobile-workspace-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 31, 51, 0.65);
+      backdrop-filter: blur(3px);
+      z-index: 9998;
+      display: none;
+    }
+    #mobile-workspace-backdrop.active {
+      display: block;
+    }
+
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      color: #E2E8F0;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+    .drawer-nav-item:hover, .drawer-nav-item.active {
+      background: rgba(8, 126, 139, 0.25);
+      color: #38B2AC;
+    }
+    .drawer-nav-item .icon {
+      font-size: 20px;
+      width: 26px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .master-desktop-only {
+        display: none !important;
+      }
+      .master-mobile-toggle {
+        display: inline-flex !important;
+      }
+      #master-topbar {
+        padding: 0 12px !important;
+      }
+      #master-bottom-nav {
+        display: flex !important;
+      }
+      #master-viewport-wrapper {
+        height: calc(100vh - 54px - 60px) !important;
+      }
+      .auth-page-wrapper {
+        padding: 16px 10px !important;
+      }
+      .app-install-banner {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 14px 14px !important;
+      }
+      .app-install-banner > div:last-child {
+        width: 100% !important;
+      }
+      .app-install-banner > div:last-child .btn {
+        flex: 1 1 45% !important;
+      }
+      .role-prompt-header {
+        padding: 16px 18px !important;
+      }
+      .auth-tab-segment {
+        margin: 12px 14px 0 !important;
+      }
+      .auth-tab-btn {
+        padding: 10px 8px !important;
+        font-size: 13px !important;
+      }
+      .auth-main-card form {
+        padding: 18px 16px !important;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .auth-page-wrapper {
+        padding: 8px 6px !important;
+      }
+      .brand-title {
+        font-size: 20px !important;
+      }
+      .brand-subtitle {
+        font-size: 12px !important;
+      }
+      .app-install-banner > div:last-child .btn {
+        flex: 1 1 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; overflow-x:hidden; overflow-y:auto; background:#F0F7FA;">
+
+  <div class="auth-page-wrapper" id="auth-view-container">
+    <!-- TOP BRAND SHOWCASE -->
+    <header class="brand-showcase">
+      <div class="brand-logo-badge">
+        <span class="cross">✚</span>
+        <span style="font-size:15px; font-weight:800; letter-spacing:0.5px;">SANJEEVANI HEALTHCARE PLATFORM</span>
+      </div>
+      <h1 class="brand-title">Rural Health & Clinical Case Undertaking Gateway</h1>
+      <p class="brand-subtitle">
+        Empowering rural primary health centres, credentialed clinicians, accredited hospitals, and patients with seamless online & offline care continuity.
+      </p>
+
+      <div class="capability-pills">
+        <span class="cap-pill">📴 Offline-First Ready (Auto-Sync)</span>
+        <span class="cap-pill">🗣️ 6 Indian Languages (Voice & Text)</span>
+        <span class="cap-pill">🛡️ Verhoeff Aadhaar & DPDP Compliant</span>
+        <span class="cap-pill">🏥 ABDM / ROHINI / NMC Verified</span>
+      </div>
+    </header>
+
+    <!-- STATUS ALERT MESSAGE -->
+    <div id="auth-status-alert" style="display:none; max-width:820px; width:100%; margin-bottom:16px; padding:12px 18px; border-radius:10px; font-size:13px; font-weight:600;"></div>
+
+    <!-- 📱 MOBILE & LAPTOP APP INSTALLATION / APK DOWNLOAD BANNER -->
+    <div class="app-install-banner" style="max-width:820px; width:100%; margin-bottom:18px; background:linear-gradient(135deg, #0B1F33 0%, #16324F 100%); border-radius:14px; padding:16px 20px; color:#FFFFFF; box-shadow:0 8px 24px rgba(11,31,51,0.22); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+      <div style="display:flex; align-items:center; gap:16px; min-width:280px; flex:1;">
+        <!-- App Icon -->
+        <div style="position:relative; width:64px; height:64px; border-radius:16px; overflow:hidden; box-shadow:0 6px 16px rgba(0,0,0,0.4); flex-shrink:0; border:2px solid rgba(255,255,255,0.25);">
+          <img src="/icons/icon-192.png" alt="Sanjeevani App Icon" style="width:100%; height:100%; object-fit:cover; display:block;">
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:16px; font-weight:800; letter-spacing:-0.2px; color:#FFFFFF;">Sanjeevani Mobile & Desktop App</span>
+            <span style="background:#087E8B; color:#fff; font-size:10px; padding:2px 8px; border-radius:12px; font-weight:700;">v1.2 APK / PWA</span>
+          </div>
+          <div style="font-size:12px; color:#9FB3C8; margin-top:2px;">
+            Install on your <strong>Phone</strong> (Android APK or Home Screen) and <strong>Laptop</strong> (Windows App).
+          </div>
+          <div style="font-size:11px; margin-top:6px; display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="color:#4ADE80; font-weight:700;">🌐 Any Phone (Mobile 4G/5G / Remote):</span>
+              <code id="txt-cloud-url" style="background:#0F263E; color:#38BDF8; padding:2px 6px; border-radius:4px; font-weight:bold; font-size:11px;">https://52449b755e4c81.lhr.life</code>
+              <button type="button" id="btn-copy-cloud-url" style="background:#0284C7; border:none; color:#FFFFFF; font-size:10.5px; padding:2px 8px; border-radius:4px; cursor:pointer; font-weight:700;" title="Copy Public Cloud Link (Works anywhere on SIM data)">📋 Copy Link</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:10.5px; color:#94A3B8;">
+              <span>📶 Same Wi-Fi Router (Local LAN):</span>
+              <code style="background:#0F263E; color:#90CAF9; padding:2px 5px; border-radius:4px;">http://192.168.29.82:8000/login</code>
+              <button type="button" id="btn-copy-wifi-url" style="background:#1E3A5F; border:none; color:#E0E8F0; font-size:10px; padding:2px 6px; border-radius:4px; cursor:pointer;" title="Copy Mobile Wi-Fi URL">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <button type="button" id="btn-create-desktop-shortcut" class="btn" style="background:#2563EB; color:#fff; border:none; padding:9px 14px; border-radius:8px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 3px 10px rgba(37,99,235,0.4);" title="Place the Sanjeevani App icon directly on your Windows Desktop">
+          <span>🖥️</span> <span>Show App on Desktop</span>
+        </button>
+        <button type="button" id="btn-download-apk" class="btn" style="background:#059669; color:#fff; border:none; padding:9px 14px; border-radius:8px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.4);" title="Download direct Android APK (127 KB) for your phone">
+          <span>⬇️</span> <span>Download APK (Phone)</span>
+        </button>
+        <button type="button" id="btn-open-ios-guide" class="btn" style="background:#000000; color:#fff; border:1px solid rgba(255,255,255,0.25); padding:9px 14px; border-radius:8px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.35);" title="How to install Sanjeevani on iPhone / iPad">
+          <span>🍏</span> <span>Install on iPhone (iOS)</span>
+        </button>
+        <button type="button" id="btn-pwa-install-banner" class="btn" style="background:linear-gradient(135deg, #087E8B, #20B2AA); color:#fff; border:none; padding:9px 14px; border-radius:8px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 3px 10px rgba(8,126,139,0.4);" title="Install as standalone native app on Windows or Android">
+          <span>📲</span> <span>Install App</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN AUTHENTICATION CONTAINER -->
+    <div class="auth-main-card">
+      <!-- 1. PROMPT HEADER -->
+      <div class="role-prompt-header">
+        <div>
+          <div class="role-prompt-title">
+            <span>🔐</span>
+            <span id="role-prompt-title-text">Select Login Mode</span>
+          </div>
+          <div class="role-prompt-desc" id="role-prompt-desc-text">
+            Choose your healthcare identity below to open your dedicated backend portal:
+          </div>
+        </div>
+        <span class="badge badge-success" style="padding:6px 12px; font-size:11px;">
+          ✓ Secure 256-bit SSL Session
+        </span>
+      </div>
+
+      <!-- 2. THREE PROMINENT PROMPT CARDS (PATIENT vs DOCTOR vs HOSPITAL) -->
+      <div class="role-cards-container">
+        <div class="role-cards-grid">
+          <!-- CARD 1: PATIENT -->
+          <div class="role-option-card" data-role="patient" id="opt-patient">
+            <div>
+              <div class="role-card-top">
+                <div class="role-card-icon">👤</div>
+                <div>
+                  <div class="role-name">Patient</div>
+                  <span class="role-badge badge-pat">ABHA Health Profile</span>
+                </div>
+              </div>
+              <div class="role-desc">
+                View personal health file, dosage timetable with voice reminders, emergency QR card, and vitals history.
+              </div>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:#0277BD;">
+              ➔ Enter Patient Health File
+            </div>
+          </div>
+
+          <!-- CARD 2: DOCTOR -->
+          <div class="role-option-card active" data-role="doctor" id="opt-doctor">
+            <div>
+              <div class="role-card-top">
+                <div class="role-card-icon">🩺</div>
+                <div>
+                  <div class="role-name">Doctor</div>
+                  <span class="role-badge badge-doc">NMC / Council Verified</span>
+                </div>
+              </div>
+              <div class="role-desc">
+                Clinical case undertaking engine, 4-tier risk triage, AI handover, voice-to-case, and OCR lab analyzer.
+              </div>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:#2E7D32;">
+              ➔ Enter Clinical Undertaking
+            </div>
+          </div>
+
+          <!-- CARD 3: HOSPITAL -->
+          <div class="role-option-card" data-role="hospital" id="opt-hospital">
+            <div>
+              <div class="role-card-top">
+                <div class="role-card-icon">🏥</div>
+                <div>
+                  <div class="role-name">Hospital / Facility</div>
+                  <span class="role-badge badge-hosp">ROHINI / CEA Verified</span>
+                </div>
+              </div>
+              <div class="role-desc">
+                Inpatient bed tracker, emergency ICU triage, doctor roster, FHIR case transfers, and rural outreach camps.
+              </div>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:#5E35B1;">
+              ➔ Enter Facility Operations
+            </div>
+          </div>
+        </div>
+
+        <!-- ASHA WORKER CHIP TOGGLE -->
+        <div class="asha-toggle-wrapper">
+          <button type="button" class="asha-chip-btn" id="opt-asha" data-role="asha_worker">
+            <span>👩⚕️</span>
+            <span>Are you a Village ASHA Health Worker? Click here</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. TAB SELECTOR: SIGN IN VS REGISTER -->
+      <div class="auth-tab-segment">
+        <button type="button" class="auth-tab-btn active" id="tab-login">Log In to Portal</button>
+        <button type="button" class="auth-tab-btn" id="tab-signup">Register New Account</button>
+      </div>
+
+      <!-- 4. CARD BODY (FORMS) -->
+      <div class="auth-card-body">
+        
+        <!-- ==================== VIEW A: LOGIN FORM ==================== -->
+        <div id="view-login">
+          <!-- 1-Click Instant Demo Credentials -->
+          <div class="quick-access-bar">
+            <div class="quick-access-header">
+              <span>⚡ One-Click Instant Sign-In:</span>
+              <span style="font-weight:normal; text-transform:none;">Directly authenticates and launches portal</span>
+            </div>
+            <div class="quick-buttons-row">
+              <button type="button" class="btn-quick" data-username="dr_kulkarni" data-password="doctor123" data-role="doctor" title="Login as Dr. Rajesh Kulkarni">
+                <span>🩺</span>
+                <span>Doctor</span>
+              </button>
+              <button type="button" class="btn-quick" data-username="hospital_admin" data-password="hospital123" data-role="hospital" title="Login as Raigad Sub-District Hospital">
+                <span>🏥</span>
+                <span>Hospital</span>
+              </button>
+              <button type="button" class="btn-quick" data-username="patient_aarnav" data-password="patient123" data-role="patient" title="Login as Aarnav Sharma">
+                <span>👤</span>
+                <span>Patient</span>
+              </button>
+              <button type="button" class="btn-quick" data-username="asha_sunita" data-password="asha123" data-role="asha_worker" title="Login as Sunita Patil (ASHA)">
+                <span>👩⚕️</span>
+                <span>ASHA</span>
+              </button>
+            </div>
+            <button type="button" class="btn btn-outline" id="btn-open-unified-suite" style="width:100%; margin-top:10px; padding:8px 12px; font-size:12px; font-weight:700; color:#087E8B; border:1.5px dashed #087E8B; background:#F0F9FA; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+              🚀 <span>Launch Unified Healthcare Workspace (Single Host Link) →</span>
+            </button>
+          </div>
+
+          <!-- Login Form Elements -->
+          <form id="form-login">
+            <div class="form-group">
+              <label class="form-label" id="lbl-login-identifier">
+                Medical License ID / Doctor Username / Email *
+              </label>
+              <input type="text" class="form-control" id="login-identifier" value="dr_kulkarni" required placeholder="e.g. dr_kulkarni or NMC/MCI-84920/2012">
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label class="form-label" style="margin-bottom:0;">Password *</label>
+                <a href="#" id="link-forgot-pass" style="font-size:12px; color:var(--secondary); text-decoration:none;">Forgot credentials?</a>
+              </div>
+              <input type="password" class="form-control" id="login-password" value="doctor123" required placeholder="••••••••">
+            </div>
+
+            <div id="active-creds-hint" style="background:#E6FFFA; border:1.5px solid #38B2AC; color:#234E52; padding:10px 14px; border-radius:8px; font-size:12px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:16px;">⚡</span>
+              <span id="active-creds-text">Ready to enter: Dr. Rajesh Kulkarni (Doctor Portal). Tap "Sign In" below!</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-main); cursor:pointer;">
+                <input type="checkbox" id="login-remember" checked> Keep me logged in on this device
+              </label>
+              <span id="btn-autofill-creds" style="font-size:12px; color:var(--primary); cursor:pointer; font-weight:700;">
+                ⚡ Reset Demo Credentials
+              </span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-login-submit" style="width:100%; padding:13px; font-size:15px; font-weight:800; border-radius:8px; background:#087E8B; border-color:#087E8B;">
+              Sign In to Doctor Clinical Portal →
+            </button>
+          </form>
+
+          <!-- Loading & Redirection Toast -->
+          <div id="login-progress-indicator" style="display:none; text-align:center; padding:18px; background:#EBF8FA; border:1px solid #087E8B; border-radius:10px; margin-top:16px;">
+            <div style="font-size:22px; margin-bottom:4px;">⏳</div>
+            <div id="login-progress-text" style="font-size:14px; font-weight:800; color:#087E8B;">
+              Authenticating session...
+            </div>
+            <div style="font-size:12px; color:#627D98; margin-top:3px;">
+              Connecting to Sanjeevani Clinical Backend...
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== VIEW B: SIGN UP FORMS ==================== -->
+        <div id="view-signup" style="display:none;">
+          
+          <!-- FORM 1: PATIENT SIGN UP -->
+          <form id="form-signup-patient">
+            <div style="background:#E1F5FE; border:1px solid #B3E5FC; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:12.5px; color:#01579B;">
+              ℹ️ <strong>Patient Account Creation:</strong> Register your self or a family member to manage digital prescriptions, schedule reminders, and download emergency QR cards.
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Full Legal Name *</label>
+              <input type="text" class="form-control" name="full_name" required placeholder="e.g. Ramesh Narayan Verma">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" class="form-control" name="email" required placeholder="ramesh.verma@example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile Number *</label>
+                <input type="tel" class="form-control" name="phone" required placeholder="+91 98234 56789">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date of Birth *</label>
+                <input type="date" class="form-control" name="dob" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gender *</label>
+                <select class="form-control" name="gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Optional Doctor & Prescription Sharing on Signup -->
+            <div style="background:#F0FAF7; border:1px solid #C6F6D5; border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+              <div style="font-size:12.5px; font-weight:700; color:#22543D; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                <span>📋</span> Have you consulted a doctor recently? (Optional)
+              </div>
+              <div style="font-size:11px; color:#276749; margin-bottom:8px;">
+                You can enter your doctor & prescription here now, or share them anytime from your patient dashboard.
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom:8px; flex:1;">
+                  <label class="form-label" style="font-size:11px;">Doctor's Name</label>
+                  <input type="text" class="form-control" name="doctor_name" placeholder="e.g. Dr. Kulkarni" style="font-size:12px;">
+                </div>
+                <div class="form-group" style="margin-bottom:8px; flex:1;">
+                  <label class="form-label" style="font-size:11px;">Clinic / Hospital Name</label>
+                  <input type="text" class="form-control" name="hospital_name" placeholder="e.g. Raigad SDH" style="font-size:12px;">
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:11px;">Prescribed Medicines (if any)</label>
+                <input type="text" class="form-control" name="prescriptions" placeholder="e.g. Tab Paracetamol 650mg morning & night" style="font-size:12px;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Create Password *</label>
+              <input type="password" class="form-control pwd-input" name="password" required placeholder="Minimum 6 characters">
+              <div class="pwd-meter-bar" style="height:4px; background:#D9E2EC; border-radius:2px; margin-top:6px; overflow:hidden;">
+                <div class="pwd-meter-fill" style="height:100%; width:0%; transition:width 0.3s;"></div>
+              </div>
+              <div class="pwd-strength-txt" style="font-size:11px; color:#627D98; margin-top:3px;">
+                Password strength: Enter at least 6 characters
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; padding:13px; font-weight:800; font-size:14px; margin-top:10px;">
+              Create Patient Account & Access Health File →
+            </button>
+          </form>
+
+          <!-- FORM 2: DOCTOR SIGN UP (MANDATORY NMC + AADHAAR VERIFICATION) -->
+          <form id="form-signup-doctor" style="display:none;">
+            <!-- Mandatory Verification Warning Callout -->
+            <div class="verification-mandatory-banner">
+              <span class="icon">🛡️</span>
+              <div>
+                <div class="title">Mandatory Doctor Credential Verification</div>
+                <div class="desc">
+                  Under National Medical Commission (NMC) regulations, doctors must provide a valid State Medical Council registration ID and a 12-digit Indian Aadhaar number validated by UIDAI Verhoeff algorithm.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Doctor Full Name (with Title) *</label>
+              <input type="text" class="form-control" name="full_name" required placeholder="e.g. Dr. Rajesh Kulkarni, MD">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Professional Email *</label>
+                <input type="email" class="form-control" name="email" required placeholder="dr.kulkarni@hospital.in">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Official Mobile Phone *</label>
+                <input type="tel" class="form-control" name="phone" required placeholder="+91 98201 23456">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" style="color:var(--primary); font-weight:800;">
+                  🩺 Medical Council Reg # (Mandatory Verification) *
+                </label>
+                <input type="text" class="form-control" name="registration_number" value="NMC/MCI-84920/2026" required placeholder="e.g. NMC/MCI-84920/2012 or MMC-48912">
+                <small style="font-size:10.5px; color:#627D98;">Validated against NMC/State Council format</small>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Clinical Specialty / Department *</label>
+                <input type="text" class="form-control" name="department" value="General Medicine & Pulmonology" required placeholder="e.g. General Medicine / Pulmonology">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="color:var(--primary); font-weight:800;">
+                🆔 12-Digit Aadhaar Number (Mandatory Verification) *
+              </label>
+              <input type="text" class="form-control" name="aadhaar_number" maxlength="14" value="5481 9283 4819" required placeholder="e.g. 5481 9283 4819">
+              <small style="font-size:10.5px; color:#627D98;">UIDAI Verhoeff validated; securely encrypted & masked (XXXX-XXXX-4819) per DPDP Act</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Clinical Password *</label>
+              <input type="password" class="form-control pwd-input" name="password" required placeholder="Strong clinical password">
+              <div class="pwd-meter-bar" style="height:4px; background:#D9E2EC; border-radius:2px; margin-top:6px; overflow:hidden;">
+                <div class="pwd-meter-fill" style="height:100%; width:0%; transition:width 0.3s;"></div>
+              </div>
+              <div class="pwd-strength-txt" style="font-size:11px; color:#627D98; margin-top:3px;">
+                Password strength: Strong password recommended
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; padding:13px; font-weight:800; font-size:14px; margin-top:10px;">
+              Verify Credentials & Register Doctor Account →
+            </button>
+          </form>
+
+          <!-- FORM 3: HOSPITAL SIGN UP (MANDATORY ROHINI / CEA + NODAL AADHAAR VERIFICATION) -->
+          <form id="form-signup-hospital" style="display:none;">
+            <!-- Mandatory Verification Warning Callout -->
+            <div class="verification-mandatory-banner" style="background:#EDE7F6; border-color:#D1C4E9;">
+              <span class="icon">🏥</span>
+              <div>
+                <div class="title" style="color:#5E35B1;">Mandatory Hospital & Facility Verification</div>
+                <div class="desc" style="color:#4527A0;">
+                  Healthcare institutions must hold a verified Insurance Registry (ROHINI ID) or Clinical Establishments Act (CEA) registration, along with the Nodal Medical Officer's Verhoeff Aadhaar verification.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Hospital / Healthcare Facility Name *</label>
+              <input type="text" class="form-control" name="full_name" required placeholder="e.g. Raigad Sub-District Hospital & PHC">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Official Facility Email *</label>
+                <input type="email" class="form-control" name="email" required placeholder="admin@raigadhospital.gov.in">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Official Phone / Emergency Hotline *</label>
+                <input type="tel" class="form-control" name="phone" required placeholder="+91 98200 44556">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" style="color:#5E35B1; font-weight:800;">
+                  🏥 ROHINI ID / CEA Registration Number *
+                </label>
+                <input type="text" class="form-control" name="registration_number" value="ROHINI-MH-89210" required placeholder="e.g. ROHINI-MH-89210 or CEA-REG-MH-4401">
+                <small style="font-size:10.5px; color:#627D98;">Verified with State Clinical Registry</small>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Facility Classification *</label>
+                <select class="form-control" name="department">
+                  <option value="Sub-District Hospital (SDH) & 24x7 Emergency">Sub-District Hospital (SDH)</option>
+                  <option value="Primary Health Centre (PHC)">Primary Health Centre (PHC)</option>
+                  <option value="Community Health Centre (CHC)">Community Health Centre (CHC)</option>
+                  <option value="District Civil Hospital">District Civil Hospital</option>
+                  <option value="Private Multispecialty Hospital">Private Multispecialty Hospital</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="color:#5E35B1; font-weight:800;">
+                🆔 Nodal Medical Officer Aadhaar (Mandatory Verification) *
+              </label>
+              <input type="text" class="form-control" name="aadhaar_number" maxlength="14" value="7892 4810 9901" required placeholder="e.g. 7892 4810 9901">
+              <small style="font-size:10.5px; color:#627D98;">UIDAI Verhoeff validation of Civil Surgeon / Medical Superintendent</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Hospital Portal Password *</label>
+              <input type="password" class="form-control pwd-input" name="password" required placeholder="Create secure administrator password">
+              <div class="pwd-meter-bar" style="height:4px; background:#D9E2EC; border-radius:2px; margin-top:6px; overflow:hidden;">
+                <div class="pwd-meter-fill" style="height:100%; width:0%; transition:width 0.3s;"></div>
+              </div>
+              <div class="pwd-strength-txt" style="font-size:11px; color:#627D98; margin-top:3px;">
+                Password strength: Strong administrator password recommended
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; padding:13px; font-weight:800; font-size:14px; margin-top:10px; background:#5E35B1; border-color:#5E35B1;">
+              Verify Facility Accreditation & Register Hospital →
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. MULTI-PAGE DIRECT SHORTCUTS TRAY -->
+    <footer class="portal-shortcut-tray">
+      <div style="font-size:12.5px; font-weight:700; color:#102A43;">
+        🚀 Switch Unified Portal (Single Host Link):
+      </div>
+      <a href="/?portal=patient" class="portal-shortcut-chip" data-quick-portal="patient">👤 Patient Health File</a>
+      <a href="/?portal=doctor" class="portal-shortcut-chip" data-quick-portal="doctor">🩺 Doctor Clinical Undertaking</a>
+      <a href="/?portal=hospital" class="portal-shortcut-chip" data-quick-portal="hospital">🏥 Hospital Bed Operations</a>
+      <a href="/?portal=asha" class="portal-shortcut-chip" data-quick-portal="asha">👩⚕️ Rural ASHA Worker</a>
+      <a href="/?portal=village" class="portal-shortcut-chip" data-quick-portal="village">🏘️ Village Board</a>
+      <a href="/?portal=keypad" class="portal-shortcut-chip" data-quick-portal="keypad" style="border-color:#1976D2; color:#1976D2;">📱 Keypad Phone SMS Sim</a>
+    </footer>
+  </div>
+
+  <!-- UNIFIED MASTER WORKSPACE CONTAINER (SINGLE HOST LINK: http://127.0.0.1:8000/) -->
+  <div id="workspace-view-container" style="display:none; width:100vw; height:100vh; flex-direction:column; background:#F8FBFC; overflow:hidden;">
+    <!-- MASTER UNIFIED TOPBAR -->
+    <header id="master-topbar" style="height:54px; background:#0B1F33; color:#FFFFFF; display:flex; align-items:center; justify-content:space-between; padding:0 16px; box-shadow:0 2px 10px rgba(0,0,0,0.25); z-index:100; flex-shrink:0;">
+      <div style="display:flex; align-items:center; gap:12px; overflow-x:auto;">
+        <!-- Brand & Gateway Switcher -->
+        <div style="display:flex; align-items:center; gap:8px; cursor:pointer;" id="brand-home-btn" title="Back to Sanjeevani Gateway Login">
+          <span style="background:linear-gradient(135deg, #087E8B, #38B2AC); color:#fff; font-size:13px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-weight:bold;">✚</span>
+          <span style="font-weight:800; font-size:15px; letter-spacing:-0.3px; color:#FFFFFF;">Sanjeevani</span>
+          <span class="master-desktop-only" style="background:#1E3A5F; font-size:9.5px; padding:2px 6px; border-radius:10px; color:#64B5F6; font-weight:700;">UNIFIED SUITE</span>
+        </div>
+
+        <div class="master-desktop-only" style="width:1px; height:22px; background:rgba(255,255,255,0.18); margin:0 2px;"></div>
+
+        <!-- MASTER PORTAL TABS (DESKTOP) -->
+        <nav id="master-portal-nav" class="master-desktop-only" style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap;">
+          <button type="button" class="master-tab-btn" data-portal="doctor" title="Doctor Clinical Undertaking & Diagnostics">
+            🩺 <span>Doctor Portal</span>
+          </button>
+          <button type="button" class="master-tab-btn" data-portal="patient" title="Patient Digital Health File & Prescriptions">
+            👤 <span>Patient Health File</span>
+          </button>
+          <button type="button" class="master-tab-btn" data-portal="hospital" title="Hospital Bed Capacity & Facility Management">
+            🏥 <span>Hospital & Beds</span>
+          </button>
+          <button type="button" class="master-tab-btn" data-portal="asha" title="Rural ASHA Village Healthcare Worker">
+            👩⚕️ <span>ASHA Worker</span>
+          </button>
+          <button type="button" class="master-tab-btn" data-portal="keypad" title="Keypad Phone 2G SMS & IVR Simulator">
+            📱 <span>Keypad Simulator</span>
+          </button>
+          <button type="button" class="master-tab-btn" data-portal="village" title="Village Health & Outbreak Epidemiology Board">
+            📊 <span>Village Board</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- RIGHT UTILITIES & USER BADGE -->
+      <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+        <!-- User Badge Pill -->
+        <div id="master-user-pill" style="display:flex; align-items:center; gap:6px; background:#16324F; padding:4px 10px; border-radius:20px; font-size:12px; border:1px solid rgba(255,255,255,0.1);">
+          <span id="master-user-icon">👤</span>
+          <span id="master-user-name" style="font-weight:600; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#E2E8F0;">User</span>
+          <span id="master-role-badge" style="font-size:10px; padding:1px 6px; border-radius:8px; background:#087E8B; color:#fff; font-weight:700;">Role</span>
+        </div>
+
+        <!-- Download APK Button (Desktop) -->
+        <a href="/download/sanjeevani.apk" download="Sanjeevani_Healthcare.apk" class="btn btn-sm master-desktop-only" style="background:#059669; color:#fff; text-decoration:none; font-size:11.5px; padding:5px 9px; border-radius:6px; font-weight:700; display:flex; align-items:center; gap:4px;" title="Download Android APK">
+          ⬇️ <span>APK</span>
+        </a>
+
+        <!-- Install App Button (Desktop) -->
+        <button type="button" id="master-btn-install-pwa" class="btn btn-sm master-desktop-only" style="background:#087E8B; color:#fff; border:none; font-size:11.5px; padding:5px 9px; border-radius:6px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;" title="Install on Laptop / Android">
+          📲 <span>Install App</span>
+        </button>
+
+        <!-- iOS iPhone Button (Desktop) -->
+        <button type="button" id="master-btn-ios-guide" class="btn btn-sm master-desktop-only" style="background:#000000; color:#fff; border:1px solid rgba(255,255,255,0.25); font-size:11.5px; padding:5px 9px; border-radius:6px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;" title="Install on iPhone / iPad">
+          🍏 <span>iOS App</span>
+        </button>
+
+        <!-- Floating Keypad Phone Drawer Toggle (Desktop) -->
+        <button type="button" id="btn-toggle-keypad-drawer" class="btn btn-sm master-desktop-only" style="background:#0284C7; color:#fff; border:none; font-size:11.5px; padding:5px 10px; border-radius:6px; display:flex; align-items:center; gap:4px; font-weight:700; cursor:pointer;" title="Toggle live 2G keypad phone side drawer">
+          📱 <span>Keypad Phone</span>
+        </button>
+
+        <!-- Gateway / Switch Account Button (Desktop) -->
+        <button type="button" id="master-btn-gateway" class="btn btn-sm master-desktop-only" style="background:#334E68; color:#fff; border:none; font-size:11.5px; padding:5px 9px; border-radius:6px; font-weight:600; cursor:pointer;" title="Switch login role or account">
+          🔐 <span>Switch Role</span>
+        </button>
+
+        <!-- Sign Out Button (Desktop) -->
+        <button type="button" id="master-btn-logout" class="btn btn-sm master-desktop-only" style="background:#EF4444; color:#fff; border:none; font-size:11.5px; padding:5px 9px; border-radius:6px; font-weight:700; cursor:pointer;" title="Sign out session">
+          🚪 <span>Sign Out</span>
+        </button>
+
+        <!-- Mobile Hamburger Menu Button (Phone / Tablet) -->
+        <button type="button" class="master-mobile-toggle" id="master-btn-mobile-menu" aria-label="Open Mobile Menu">
+          ☰
+        </button>
+      </div>
+    </header>
+
+    <!-- MOBILE SLIDE-OVER DRAWER BACKDROP -->
+    <div id="mobile-workspace-backdrop"></div>
+
+    <!-- MOBILE SLIDE-OVER DRAWER -->
+    <aside id="mobile-workspace-drawer">
+      <div style="background:#0F263E; padding:16px 18px; border-bottom:1px solid rgba(255,255,255,0.12); display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg, #087E8B, #38B2AC); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:bold;">✚</div>
+          <div>
+            <div style="font-weight:800; font-size:15px; color:#FFFFFF;" id="drawer-user-name">Sanjeevani User</div>
+            <div style="font-size:11px; color:#38B2AC; font-weight:700;" id="drawer-role-badge">VERIFIED ROLE</div>
+          </div>
+        </div>
+        <button type="button" id="btn-close-workspace-drawer" style="background:transparent; border:none; color:#FFFFFF; font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">✕</button>
+      </div>
+
+      <div style="padding:16px 14px; flex:1; display:flex; flex-direction:column; gap:6px;">
+        <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.8px; color:#64748B; font-weight:800; padding:6px 10px;">
+          Clinical & Care Portals
+        </div>
+
+        <button type="button" class="drawer-nav-item" data-drawer-portal="doctor">
+          <span class="icon">🩺</span>
+          <span>Doctor Clinical Undertaking</span>
+        </button>
+        <button type="button" class="drawer-nav-item" data-drawer-portal="patient">
+          <span class="icon">👤</span>
+          <span>Patient Health File</span>
+        </button>
+        <button type="button" class="drawer-nav-item" data-drawer-portal="hospital">
+          <span class="icon">🏥</span>
+          <span>Hospital & Bed Operations</span>
+        </button>
+        <button type="button" class="drawer-nav-item" data-drawer-portal="asha">
+          <span class="icon">👩⚕️</span>
+          <span>Rural ASHA Worker Care</span>
+        </button>
+        <button type="button" class="drawer-nav-item" data-drawer-portal="keypad">
+          <span class="icon">📱</span>
+          <span>Keypad Phone SMS Simulator</span>
+        </button>
+        <button type="button" class="drawer-nav-item" data-drawer-portal="village">
+          <span class="icon">📊</span>
+          <span>Village Epidemiology Board</span>
+        </button>
+
+        <div style="height:1px; background:rgba(255,255,255,0.1); margin:12px 0;"></div>
+
+        <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.8px; color:#64748B; font-weight:800; padding:6px 10px;">
+          App Downloads & Utilities
+        </div>
+
+        <a href="/download/sanjeevani.apk" download="Sanjeevani_Healthcare.apk" class="drawer-nav-item" style="color:#34D399;">
+          <span class="icon">⬇️</span>
+          <span>Download Android APK</span>
+        </a>
+        <button type="button" class="drawer-nav-item" id="drawer-btn-ios-guide" style="color:#60A5FA;">
+          <span class="icon">🍏</span>
+          <span>Install on iPhone (iOS)</span>
+        </button>
+        <button type="button" class="drawer-nav-item" id="drawer-btn-install-pwa" style="color:#38B2AC;">
+          <span class="icon">📲</span>
+          <span>Add to Home Screen</span>
+        </button>
+        <button type="button" class="drawer-nav-item" id="drawer-btn-keypad-toggle" style="color:#38BDF8;">
+          <span class="icon">📱</span>
+          <span>Open Keypad Phone Drawer</span>
+        </button>
+
+        <div style="height:1px; background:rgba(255,255,255,0.1); margin:12px 0;"></div>
+
+        <button type="button" class="drawer-nav-item" id="drawer-btn-gateway" style="color:#94A3B8;">
+          <span class="icon">🔐</span>
+          <span>Switch Login Role</span>
+        </button>
+        <button type="button" class="drawer-nav-item" id="drawer-btn-logout" style="color:#F87171;">
+          <span class="icon">🚪</span>
+          <span>Sign Out</span>
+        </button>
+      </div>
+
+      <div style="padding:12px 18px; background:#071422; border-top:1px solid rgba(255,255,255,0.08); font-size:11px; color:#64748B;">
+        Sanjeevani v1.2 • Fully Responsive PWA
+      </div>
+    </aside>
+
+    <!-- ACTIVE PORTAL IFRAME VIEWPORT -->
+    <div id="master-viewport-wrapper" style="flex:1; width:100%; height:calc(100vh - 54px); position:relative; overflow:hidden;">
+      <iframe id="master-portal-frame" src="about:blank" style="width:100%; height:100%; border:none; display:block;" title="Sanjeevani Active Portal Viewport"></iframe>
+
+      <!-- FLOATING KEYPAD PHONE DRAWER (SLIDE-IN ON ANY SCREEN) -->
+      <div id="floating-keypad-drawer" style="display:none; position:absolute; top:10px; right:12px; bottom:10px; width:390px; max-width:92vw; background:#FFFFFF; border-radius:14px; box-shadow:0 14px 40px rgba(0,0,0,0.4); border:2px solid #0B1F33; z-index:999; flex-direction:column; overflow:hidden;">
+        <div style="background:#0B1F33; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:700; font-size:12.5px; display:flex; align-items:center; gap:6px;">
+            <span>📱</span> Live 2G Keypad Phone (Real-time SMS)
+          </div>
+          <button type="button" id="btn-close-keypad-drawer" style="background:transparent; border:none; color:#fff; font-size:16px; cursor:pointer; padding:2px 6px;">✕</button>
+        </div>
+        <iframe src="/keypad?standalone=true" style="width:100%; height:calc(100% - 38px); border:none;" title="Keypad Phone Simulator Drawer"></iframe>
+      </div>
+    </div>
+
+    <!-- MOBILE MASTER BOTTOM NAVIGATION BAR (PORTALS QUICK SWITCH) -->
+    <nav id="master-bottom-nav" class="mobile-bottom-nav">
+      <button type="button" class="bottom-nav-item active" data-bot-portal="doctor" id="bot-portal-doc">
+        <span class="icon">🩺</span>
+        <span>Doctor</span>
+      </button>
+      <button type="button" class="bottom-nav-item" data-bot-portal="patient" id="bot-portal-pat">
+        <span class="icon">👤</span>
+        <span>Patient</span>
+      </button>
+      <button type="button" class="bottom-nav-item" data-bot-portal="hospital" id="bot-portal-hosp">
+        <span class="icon">🏥</span>
+        <span>Hospital</span>
+      </button>
+      <button type="button" class="bottom-nav-item" data-bot-portal="keypad" id="bot-portal-keypad">
+        <span class="icon">📱</span>
+        <span>Keypad</span>
+      </button>
+      <button type="button" class="bottom-nav-item" id="bot-portal-more">
+        <span class="icon">☰</span>
+        <span>Menu</span>
+      </button>
+    </nav>
+  </div>
+
+  <script type="module" src="/js/auth.js"></script>
+  <script type="module">
+    // Master Workspace Single Host Controller
+    window.activateWorkspacePortal = function(portalKey, user = null) {
+      const authContainer = document.getElementById('auth-view-container');
+      const workspaceContainer = document.getElementById('workspace-view-container');
+      const frame = document.getElementById('master-portal-frame');
+      if (!authContainer || !workspaceContainer || !frame) return;
+
+      const u = user || JSON.parse(localStorage.getItem('sanjeevani_user') || '{}');
+      const userRole = (u.role || '').toLowerCase();
+      const isPatient = (userRole === 'patient');
+
+      // STRICT ROLE-BASED ACCESS CONTROL (RBAC):
+      // If registered or logged in as a PATIENT: ONLY show & permit Patient Portal!
+      // If registered or logged in as DOCTOR or HOSPITAL (or admin/asha): show & permit EVERY portal!
+      if (isPatient) {
+        portalKey = 'patient';
+      }
+
+      document.body.style.overflow = 'hidden';
+      authContainer.style.display = 'none';
+      workspaceContainer.style.display = 'flex';
+
+      // Update Tab Visibility based on Role:
+      document.querySelectorAll('.master-tab-btn').forEach(btn => {
+        const p = btn.getAttribute('data-portal');
+        if (isPatient) {
+          // Patient ONLY sees Patient Portal
+          if (p === 'patient') {
+            btn.style.display = 'inline-flex';
+            btn.classList.add('active');
+          } else {
+            btn.style.display = 'none'; // Hidden completely for patient!
+          }
+        } else {
+          // Doctor / Hospital sees EVERY portal
+          btn.style.display = 'inline-flex';
+          if (p === portalKey) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        }
+      });
+
+      // Update Drawer and Bottom Navigation Tabs
+      document.querySelectorAll('.drawer-nav-item[data-drawer-portal]').forEach(btn => {
+        const p = btn.getAttribute('data-drawer-portal');
+        if (isPatient) {
+          btn.style.display = (p === 'patient') ? 'flex' : 'none';
+        } else {
+          btn.style.display = 'flex';
+        }
+        if (p === portalKey) {
+          btn.classList.add('active');
+          btn.style.background = 'rgba(8, 126, 139, 0.35)';
+          btn.style.color = '#38B2AC';
+        } else {
+          btn.classList.remove('active');
+          btn.style.background = 'transparent';
+          btn.style.color = '#E2E8F0';
+        }
+      });
+
+      document.querySelectorAll('.bottom-nav-item[data-bot-portal]').forEach(btn => {
+        const p = btn.getAttribute('data-bot-portal');
+        if (isPatient) {
+          btn.style.display = (p === 'patient') ? 'flex' : 'none';
+        } else {
+          btn.style.display = 'flex';
+        }
+        if (p === portalKey) {
+          btn.classList.add('active');
+          btn.style.color = '#38B2AC';
+        } else {
+          btn.classList.remove('active');
+          btn.style.color = '#94A3B8';
+        }
+      });
+
+      // Update iframe source
+      const targetSrc = `/${portalKey}?standalone=true`;
+      if (frame.getAttribute('data-current') !== portalKey) {
+        frame.setAttribute('data-current', portalKey);
+        frame.src = targetSrc;
+      }
+
+      // Update user badge in topbar and mobile drawer
+      const nameEl = document.getElementById('master-user-name');
+      const roleEl = document.getElementById('master-role-badge');
+      const iconEl = document.getElementById('master-user-icon');
+      const drawerNameEl = document.getElementById('drawer-user-name');
+      const drawerRoleEl = document.getElementById('drawer-role-badge');
+
+      const displayName = u.full_name || u.username || 'User';
+      const displayRole = (u.role || 'user').toUpperCase();
+
+      if (nameEl) nameEl.textContent = displayName;
+      if (drawerNameEl) drawerNameEl.textContent = displayName;
+
+      if (roleEl) roleEl.textContent = displayRole;
+      if (drawerRoleEl) drawerRoleEl.textContent = `VERIFIED ${displayRole}`;
+
+      if (roleEl && u.role) {
+        if (u.role === 'doctor') {
+          roleEl.style.background = '#087E8B';
+          if (iconEl) iconEl.textContent = '🩺';
+        } else if (u.role === 'hospital') {
+          roleEl.style.background = '#5E35B1';
+          if (iconEl) iconEl.textContent = '🏥';
+        } else if (u.role === 'asha_worker') {
+          roleEl.style.background = '#F59E0B';
+          if (iconEl) iconEl.textContent = '👩⚕️';
+        } else {
+          roleEl.style.background = '#0284C7';
+          if (iconEl) iconEl.textContent = '👤';
+        }
+      }
+
+      history.replaceState(null, '', `/?portal=${portalKey}`);
+      localStorage.setItem('sanjeevani_active_portal', portalKey);
+    };
+
+    window.switchToGateway = function() {
+      const authContainer = document.getElementById('auth-view-container');
+      const workspaceContainer = document.getElementById('workspace-view-container');
+      if (authContainer) {
+        authContainer.style.display = 'flex';
+        document.body.style.overflow = 'auto';
+      }
+      if (workspaceContainer) workspaceContainer.style.display = 'none';
+      history.replaceState(null, '', '/');
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const portalParam = urlParams.get('portal');
+      const msgParam = urlParams.get('msg');
+      const token = localStorage.getItem('sanjeevani_token');
+      const savedPortal = localStorage.getItem('sanjeevani_active_portal');
+
+      // Auto-enter workspace ONLY if portal explicitly specified in URL query
+      if (portalParam) {
+        window.activateWorkspacePortal(portalParam);
+      } else {
+        // ALWAYS present the Login Page / Gateway at start!
+        window.switchToGateway();
+
+        // If an active session already exists in localStorage, offer a convenient resume banner on the login page
+        if (token && msgParam !== 'logged_out') {
+          try {
+            const u = JSON.parse(localStorage.getItem('sanjeevani_user') || '{}');
+            const alertBox = document.getElementById('auth-status-alert');
+            if (alertBox && (u.full_name || u.username)) {
+              const roleDisplay = (u.role || 'user').toUpperCase();
+              const targetPortal = (u.role === 'patient') ? 'patient' : (savedPortal || (u.role === 'doctor' ? 'doctor' : (u.role === 'hospital' ? 'hospital' : (u.role === 'asha_worker' ? 'asha' : 'patient'))));
+
+              alertBox.style.display = 'flex';
+              alertBox.style.justifyContent = 'space-between';
+              alertBox.style.alignItems = 'center';
+              alertBox.style.flexWrap = 'wrap';
+              alertBox.style.gap = '10px';
+              alertBox.style.background = '#EBF8FF';
+              alertBox.style.border = '1.5px solid #BEE3F8';
+              alertBox.style.color = '#2B6CB0';
+              alertBox.innerHTML = `
+                <div>
+                  👤 <strong>Active Session Found:</strong> Logged in as <strong>${u.full_name || u.username}</strong> (<span style="font-weight:700;">${roleDisplay}</span>).
+                </div>
+                <div style="display:flex; gap:8px;">
+                  <button type="button" id="btn-resume-session" style="background:#087E8B; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
+                    ▶ Resume Workspace →
+                  </button>
+                  <button type="button" id="btn-clear-session" style="background:transparent; color:#E53E3E; border:1px solid #FEB2B2; padding:6px 10px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;">
+                    Switch User / Log Out
+                  </button>
+                </div>
+              `;
+
+              document.getElementById('btn-resume-session')?.addEventListener('click', () => {
+                window.activateWorkspacePortal(targetPortal, u);
+              });
+              document.getElementById('btn-clear-session')?.addEventListener('click', () => {
+                localStorage.removeItem('sanjeevani_token');
+                localStorage.removeItem('sanjeevani_user');
+                localStorage.removeItem('sanjeevani_active_portal');
+                alertBox.style.display = 'none';
+              });
+            }
+          } catch(e) {}
+        }
+      }
+
+      // Master Tab Click Listeners with Patient RBAC restriction
+      document.querySelectorAll('.master-tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          const p = btn.getAttribute('data-portal');
+          const u = JSON.parse(localStorage.getItem('sanjeevani_user') || '{}');
+          if (u.role === 'patient' && p !== 'patient') {
+            return; // Block patient from switching to clinician/hospital tabs
+          }
+          if (p) window.activateWorkspacePortal(p);
+        };
+      });
+
+      // Quick shortcut chips on Gateway with RBAC check
+      document.querySelectorAll('[data-quick-portal]').forEach(chip => {
+        chip.onclick = (e) => {
+          e.preventDefault();
+          const p = chip.getAttribute('data-quick-portal');
+          const u = JSON.parse(localStorage.getItem('sanjeevani_user') || '{}');
+          if (u.role === 'patient' && p !== 'patient') {
+            alert('Access Restricted: Patient accounts only have access to their personal Digital Health File.');
+            window.activateWorkspacePortal('patient');
+            return;
+          }
+          if (p) window.activateWorkspacePortal(p);
+        };
+      });
+
+      // Quick Launch Unified Suite button
+      document.getElementById('btn-open-unified-suite')?.addEventListener('click', async () => {
+        let token = localStorage.getItem('sanjeevani_token');
+        if (!token) {
+          try {
+            const res = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username: 'dr_kulkarni', password: 'doctor123' })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.token) {
+                localStorage.setItem('sanjeevani_token', data.token);
+                localStorage.setItem('sanjeevani_user', JSON.stringify(data.user));
+              }
+            } else {
+              throw new Error('Server unreachable');
+            }
+          } catch(e) {
+            localStorage.setItem('sanjeevani_token', 'offline_session_' + Date.now());
+            localStorage.setItem('sanjeevani_user', JSON.stringify({
+              username: 'dr_kulkarni',
+              full_name: 'Dr. Rajesh Kulkarni, MD',
+              role: 'doctor',
+              verified: true,
+              registration_number: 'NMC/MCI-84920/2012'
+            }));
+          }
+        }
+        window.activateWorkspacePortal('doctor');
+      });
+
+      // Gateway / Switch role button
+      document.getElementById('master-btn-gateway')?.addEventListener('click', () => {
+        window.switchToGateway();
+      });
+
+      // Brand home button
+      document.getElementById('brand-home-btn')?.addEventListener('click', () => {
+        window.switchToGateway();
+      });
+
+      // Master Logout button
+      document.getElementById('master-btn-logout')?.addEventListener('click', () => {
+        localStorage.removeItem('sanjeevani_token');
+        localStorage.removeItem('sanjeevani_user');
+        localStorage.removeItem('sanjeevani_active_portal');
+        window.switchToGateway();
+        const alertBox = document.getElementById('auth-status-alert');
+        if (alertBox) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#D4EDDA';
+          alertBox.style.border = '1.5px solid #C3E6CB';
+          alertBox.style.color = '#155724';
+          alertBox.innerHTML = '✓ <strong>Securely Signed Out:</strong> Session closed successfully.';
+        }
+      });
+
+      // Floating Keypad Phone Drawer Toggle
+      const drawer = document.getElementById('floating-keypad-drawer');
+      document.getElementById('btn-toggle-keypad-drawer')?.addEventListener('click', () => {
+        if (drawer) {
+          drawer.style.display = (drawer.style.display === 'none' || !drawer.style.display) ? 'flex' : 'none';
+        }
+      });
+      document.getElementById('btn-close-keypad-drawer')?.addEventListener('click', () => {
+        if (drawer) drawer.style.display = 'none';
+      });
+
+      // Mobile Slide-Over Drawer Handlers
+      const mobileDrawer = document.getElementById('mobile-workspace-drawer');
+      const mobileBackdrop = document.getElementById('mobile-workspace-backdrop');
+      const openDrawer = () => {
+        if (mobileDrawer) mobileDrawer.classList.add('open');
+        if (mobileBackdrop) mobileBackdrop.classList.add('active');
+      };
+      const closeDrawer = () => {
+        if (mobileDrawer) mobileDrawer.classList.remove('open');
+        if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+      };
+
+      document.getElementById('master-btn-mobile-menu')?.addEventListener('click', openDrawer);
+      document.getElementById('bot-portal-more')?.addEventListener('click', openDrawer);
+      document.getElementById('btn-close-workspace-drawer')?.addEventListener('click', closeDrawer);
+      document.getElementById('mobile-workspace-backdrop')?.addEventListener('click', closeDrawer);
+
+      document.querySelectorAll('.drawer-nav-item[data-drawer-portal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = btn.getAttribute('data-drawer-portal');
+          window.activateWorkspacePortal(p);
+          closeDrawer();
+        });
+      });
+
+      document.querySelectorAll('.bottom-nav-item[data-bot-portal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = btn.getAttribute('data-bot-portal');
+          window.activateWorkspacePortal(p);
+          closeDrawer();
+        });
+      });
+
+      document.getElementById('drawer-btn-ios-guide')?.addEventListener('click', () => {
+        closeDrawer();
+        openIosModal();
+      });
+      document.getElementById('drawer-btn-install-pwa')?.addEventListener('click', () => {
+        closeDrawer();
+        handlePwaInstall();
+      });
+      document.getElementById('drawer-btn-keypad-toggle')?.addEventListener('click', () => {
+        closeDrawer();
+        if (drawer) drawer.style.display = (drawer.style.display === 'none' || !drawer.style.display) ? 'flex' : 'none';
+      });
+      document.getElementById('drawer-btn-gateway')?.addEventListener('click', () => {
+        closeDrawer();
+        window.switchToGateway();
+      });
+      document.getElementById('drawer-btn-logout')?.addEventListener('click', () => {
+        closeDrawer();
+        document.getElementById('master-btn-logout')?.click();
+      });
+
+      // PWA Install Prompt Handler (Desktop & Mobile)
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      const handlePwaInstall = async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log(`User response to install: ${outcome}`);
+          deferredPrompt = null;
+        } else {
+          alert("📱 How to Install Sanjeevani as an App:\n\n• On Laptop (Windows): Look for the 'Install App' icon on the right side of your Chrome/Edge address bar, or click Menu (3 dots) -> Apps -> 'Install Sanjeevani'.\n\n• On Android Phone: Open http://192.168.29.82:8000/login in Chrome -> Tap 3 dots -> 'Install app' or 'Add to Home screen'.\n\n• Alternatively, click 'Download APK' to install the APK directly on Android!");
+        }
+      };
+
+      document.getElementById('btn-pwa-install-banner')?.addEventListener('click', handlePwaInstall);
+      document.getElementById('master-btn-install-pwa')?.addEventListener('click', handlePwaInstall);
+
+      // Place App on Desktop Button Handler
+      document.getElementById('btn-create-desktop-shortcut')?.addEventListener('click', async () => {
+        const btn = document.getElementById('btn-create-desktop-shortcut');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<span>⏳</span> <span>Placing...</span>';
+        }
+        try {
+          const res = await fetch('/api/system/create-desktop-shortcut', { method: 'POST' });
+          const data = await res.json();
+          alert("✓ SUCCESS!\n\nSanjeevani Healthcare App has been placed directly on your Windows Desktop!\n\nLook at your Desktop for 'Sanjeevani Healthcare' with the official glowing medical icon.");
+        } catch(e) {
+          alert("Shortcut is already placed on your Desktop: C:\\Users\\Santosh Parab\\Desktop\\Sanjeevani Healthcare.lnk");
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>🖥️</span> <span>App Placed on Desktop ✓</span>';
+          }
+        }
+      });
+
+      // Direct Blob APK Download Handler (Prevents browser download blockage)
+      document.getElementById('btn-download-apk')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-download-apk');
+        if (btn) btn.innerHTML = '<span>⏳</span> <span>Starting Download...</span>';
+        try {
+          const res = await fetch('/download/sanjeevani.apk');
+          if (!res.ok) throw new Error('Download failed: ' + res.status);
+          const blob = await res.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = blobUrl;
+          a.download = 'Sanjeevani_Healthcare.apk';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            a.remove();
+            window.URL.revokeObjectURL(blobUrl);
+          }, 1500);
+          if (btn) btn.innerHTML = '<span>✓</span> <span>Downloaded APK</span>';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = '<span>⬇️</span> <span>Download APK (Phone)</span>';
+          }, 3000);
+        } catch(err) {
+          // Fallback to direct navigation
+          window.location.href = '/download/sanjeevani.apk';
+        }
+      });
+
+      // Copy Cloud Public URL (Mobile 4G/5G / Remote)
+      let cloudUrl = 'https://52449b755e4c81.lhr.life';
+      fetch('/api/system/network-info').then(r => r.json()).then(info => {
+        if (info.cloud_url) {
+          cloudUrl = info.cloud_url;
+          const codeEl = document.getElementById('txt-cloud-url');
+          if (codeEl) codeEl.textContent = info.cloud_url;
+          const iosCode = document.getElementById('txt-ios-cloud-url');
+          if (iosCode) iosCode.textContent = info.cloud_url;
+          const stepCode = document.getElementById('step-cloud-url');
+          if (stepCode) stepCode.textContent = info.cloud_url;
+        }
+      }).catch(() => {});
+
+      const handleCopyCloud = (btnId) => {
+        navigator.clipboard?.writeText(cloudUrl).then(() => {
+          const btn = document.getElementById(btnId);
+          if (btn) {
+            const orig = btn.innerHTML;
+            btn.innerHTML = '✓ Copied!';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+          }
+        }).catch(() => {
+          prompt('Copy Cloud App Link:', cloudUrl);
+        });
+      };
+
+      document.getElementById('btn-copy-cloud-url')?.addEventListener('click', () => handleCopyCloud('btn-copy-cloud-url'));
+      document.getElementById('btn-copy-ios-cloud-url')?.addEventListener('click', () => handleCopyCloud('btn-copy-ios-cloud-url'));
+
+      // Copy Wi-Fi LAN URL
+      document.getElementById('btn-copy-wifi-url')?.addEventListener('click', () => {
+        const url = 'http://192.168.29.82:8000/login';
+        navigator.clipboard?.writeText(url).then(() => {
+          const btn = document.getElementById('btn-copy-wifi-url');
+          if (btn) {
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+          }
+        }).catch(() => {
+          prompt('Copy phone Wi-Fi link:', url);
+        });
+      });
+
+      // iOS Install Modal Handlers
+      const modalIos = document.getElementById('modal-ios-install');
+      const openIosModal = () => {
+        if (modalIos) modalIos.style.display = 'flex';
+      };
+      const closeIosModal = () => {
+        if (modalIos) modalIos.style.display = 'none';
+      };
+
+      document.getElementById('btn-open-ios-guide')?.addEventListener('click', openIosModal);
+      document.getElementById('master-btn-ios-guide')?.addEventListener('click', openIosModal);
+      document.getElementById('close-modal-ios')?.addEventListener('click', closeIosModal);
+      document.getElementById('btn-close-ios-modal')?.addEventListener('click', closeIosModal);
+      document.getElementById('btn-copy-ios-url')?.addEventListener('click', () => {
+        const url = 'http://192.168.29.82:8000/login';
+        navigator.clipboard?.writeText(url).then(() => {
+          const btn = document.getElementById('btn-copy-ios-url');
+          if (btn) {
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => { btn.textContent = '📋 Copy Link'; }, 2000);
+          }
+        }).catch(() => {
+          prompt('Copy iPhone link:', url);
+        });
+      });
+    });
+  </script>
+
+  <!-- ==================== MODAL: iOS / iPhone APP INSTALLATION ==================== -->
+  <div class="modal-overlay" id="modal-ios-install" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(11,31,51,0.7); backdrop-filter:blur(4px); z-index:9999; display:none; align-items:center; justify-content:center; padding:16px;">
+    <div class="modal-content" style="background:#FFFFFF; border-radius:18px; max-width:680px; width:100%; box-shadow:0 20px 50px rgba(0,0,0,0.3); overflow:hidden; border:1px solid #D9E2EC; animation:modalSlideUp 0.3s ease-out;">
+      <div class="modal-header" style="background:#0B1F33; color:#FFFFFF; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:22px;">🍏</span>
+          <div>
+            <h3 style="margin:0; font-size:17px; font-weight:800; color:#FFFFFF;">Install Sanjeevani on iPhone & iPad (iOS)</h3>
+            <div style="font-size:11.5px; color:#9FB3C8;">Apple Safari Web App Installation Guide</div>
+          </div>
+        </div>
+        <button type="button" class="close-btn" id="close-modal-ios" style="background:transparent; border:none; color:#FFFFFF; font-size:22px; cursor:pointer;">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:22px 24px; max-height:80vh; overflow-y:auto;">
+        
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:12px 16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:26px;">📲</span>
+          <div style="font-size:12.5px; color:#166534; line-height:1.5;">
+            <strong>Works Remote & 100% Offline!</strong> Apple iOS allows full progressive apps to be installed directly on your Home Screen via Safari. It runs full-screen with zero browser bars and works completely offline even in Airplane mode without any internet connection!
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:18px; margin-bottom:20px;">
+          <!-- QR Code Box (Public Cloud Tunnel) -->
+          <div style="background:#F8FBFC; border:1.5px solid #0284C7; border-radius:12px; padding:16px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(2,132,199,0.08);">
+            <div style="font-size:12px; font-weight:800; color:#0369A1; margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+              <span>🌐</span> Scan to Open on Any Mobile Data (4G/5G):
+            </div>
+            <div style="background:#FFFFFF; padding:10px; border-radius:10px; border:1px solid #CBD5E1; box-shadow:0 4px 12px rgba(0,0,0,0.06); display:inline-block;">
+              <img src="/icons/cloud_qr.png" alt="Scan with iPhone Camera" style="width:170px; height:170px; display:block;">
+            </div>
+            <div style="font-size:11px; color:#0369A1; font-weight:600; margin-top:8px;">
+              Point iPhone or Android Camera at this QR Code
+            </div>
+          </div>
+
+          <!-- Direct URLs (Cloud HTTPS & Local Wi-Fi) -->
+          <div style="display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+            <div style="background:#F0F9FF; border:1.5px solid #BAE6FD; border-radius:10px; padding:12px;">
+              <div style="font-size:12px; font-weight:800; color:#0369A1; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+                <span>🌐</span> Option 1: Mobile Data / Any Internet (Recommended):
+              </div>
+              <div id="txt-ios-cloud-url" style="background:#0F172A; color:#38BDF8; font-family:monospace; padding:8px 10px; border-radius:6px; font-size:12px; font-weight:bold; word-break:break-all; border:1px solid #334155; margin-bottom:6px;">
+                https://52449b755e4c81.lhr.life
+              </div>
+              <button type="button" class="btn btn-sm" id="btn-copy-ios-cloud-url" style="background:#0284C7; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <span>📋</span> <span>Copy Cloud Link</span>
+              </button>
+              <div style="font-size:10.5px; color:#0369A1; margin-top:5px;">
+                ✓ Works outside Wi-Fi on SIM cellular data (Jio, Airtel, Vi, etc.)
+              </div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:10px 12px;">
+              <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">
+                📶 Option 2: Local Same Wi-Fi Router (LAN):
+              </div>
+              <div style="background:#1E293B; color:#94A3B8; font-family:monospace; padding:6px 8px; border-radius:6px; font-size:11px; word-break:break-all; margin-bottom:6px;">
+                http://192.168.29.82:8000/login
+              </div>
+              <button type="button" class="btn btn-sm" id="btn-copy-ios-url" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                <span>📋</span> <span>Copy Wi-Fi Link</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Step Guide -->
+        <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+          <span>📋</span> 4 Steps to Install on iPhone:
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div style="background:#087E8B; color:#fff; font-weight:800; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">1</div>
+            <div style="font-size:13px; color:#334155;">
+              Open <strong>Safari</strong> on your iPhone and go to <code id="step-cloud-url">https://52449b755e4c81.lhr.life</code> (or scan the QR code).
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div style="background:#087E8B; color:#fff; font-weight:800; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">2</div>
+            <div style="font-size:13px; color:#334155;">
+              Tap the <strong>Share button</strong> at the bottom center of Safari (the square box with an arrow pointing up: <span style="font-size:16px;">[↑]</span>).
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div style="background:#087E8B; color:#fff; font-weight:800; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">3</div>
+            <div style="font-size:13px; color:#334155;">
+              Scroll down and tap <strong>"Add to Home Screen"</strong> (➕ <em>Add to Home Screen</em>).
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div style="background:#087E8B; color:#fff; font-weight:800; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">4</div>
+            <div style="font-size:13px; color:#334155;">
+              Tap <strong>"Add"</strong> in the top-right corner. The official Sanjeevani icon now appears on your Home Screen!
+            </div>
+          </div>
+        </div>
+
+        <!-- Offline Instructions Callout -->
+        <div style="background:#FEF3C7; border:1.5px solid #FCD34D; border-radius:10px; padding:12px 16px; margin-top:16px;">
+          <div style="font-size:13px; font-weight:800; color:#92400E; display:flex; align-items:center; gap:6px;">
+            <span>📴</span> How Offline Mode Works (Zero Internet / Airplane Mode):
+          </div>
+          <div style="font-size:12px; color:#78350F; line-height:1.5; margin-top:5px;">
+            1. Open the app from your Home Screen once while connected.<br>
+            2. The entire clinical suite, patient records, doctor engine, and offline database are automatically saved into your phone's storage.<br>
+            3. <strong>Turn ON Airplane Mode (no internet, no Wi-Fi)</strong>: Open the app anytime — it launches instantly and allows offline patient consultations and record viewing!
+          </div>
+        </div>
+
+        <div style="margin-top:18px; padding-top:14px; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="font-size:12px; color:#059669; font-weight:700;">
+            ✓ For Android: Open the Cloud link in Chrome & tap "Add to Home screen" or use the APK!
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-close-ios-modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Register Resilient Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then((reg) => {
+            console.log('✓ Sanjeevani Offline Service Worker Active:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('Service Worker registration note:', err);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>

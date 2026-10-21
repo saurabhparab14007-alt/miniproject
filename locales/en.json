@@ -1,0 +1,46 @@
+{
+  "app_name": "Sanjeevani",
+  "app_tagline": "Rural Health & Patient Case Undertaking System",
+  "auth": {
+    "login_tab": "Log In",
+    "signup_tab": "Sign Up",
+    "role_patient": "Patient",
+    "role_doctor": "Doctor / Hospital",
+    "role_asha": "Rural Health Worker (ASHA)",
+    "email_or_id": "Email or Patient ID",
+    "password": "Password",
+    "remember_me": "Remember Me",
+    "forgot_password": "Forgot Password?",
+    "full_name": "Full Name",
+    "dob": "Date of Birth",
+    "phone": "Phone Number",
+    "institution_name": "Institution / Hospital Name",
+    "medical_license": "Medical License Number (NMC / State Council)",
+    "department": "Specialty / Department",
+    "aadhaar_label": "12-Digit Aadhaar Card Number"
+  },
+  "clinical": {
+    "chief_complaint": "Chief Complaint",
+    "duration": "Duration",
+    "symptoms": "Associated Symptoms",
+    "diagnosis": "Diagnosis",
+    "treatment": "Treatment Plan",
+    "allergies": "Drug Allergies",
+    "vitals": "Vital Signs",
+    "verify_before_save": "Verify and Confirm Before Saving to Record",
+    "smart_alerts": {
+      "critical": "Critical Life Risk",
+      "urgent": "Urgent Review Required",
+      "followup": "Follow-up Due",
+      "stable": "Stable Condition"
+    }
+  },
+  "rural": {
+    "todays_work": "Today's Work",
+    "home_visits": "Home Visits Due",
+    "vaccinations": "Vaccinations Pending",
+    "keypad_sms": "Send SMS to Keypad Phone",
+    "family_graph": "Family Health Graph",
+    "village_intel": "Village Health Intelligence"
+  }
+}

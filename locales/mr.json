@@ -1,0 +1,46 @@
+{
+  "app_name": "संजीवनी",
+  "app_tagline": "ग्रामीण आरोग्य आणि रुग्ण केस व्यवस्थापन प्रणाली",
+  "auth": {
+    "login_tab": "लॉग इन",
+    "signup_tab": "नवीन नोंदणी (साइन अप)",
+    "role_patient": "रुग्ण (Patient)",
+    "role_doctor": "डॉक्टर / रुग्णालय",
+    "role_asha": "आशा आरोग्य सेविका (ASHA Worker)",
+    "email_or_id": "ईमेल किंवा रुग्ण आयडी",
+    "password": "पासवर्ड",
+    "remember_me": "माझी आठवण ठेवा",
+    "forgot_password": "पासवर्ड विसरलात?",
+    "full_name": "पूर्ण नाव",
+    "dob": "जन्म तारीख",
+    "phone": "मोबाईल नंबर",
+    "institution_name": "रुग्णालयाचे नाव",
+    "medical_license": "वैद्यकीय परवाना क्रमांक (MMC/NMC)",
+    "department": "विभाग / तज्ञता",
+    "aadhaar_label": "१२-अंकी आधार कार्ड क्रमांक"
+  },
+  "clinical": {
+    "chief_complaint": "मुख्य तक्रार",
+    "duration": "कालावधी",
+    "symptoms": "संबंधित लक्षणे",
+    "diagnosis": "निदान",
+    "treatment": "उपचार योजना",
+    "allergies": "औषध अ‍ॅलर्जी",
+    "vitals": "शारीरिक स्थिती (Vitals)",
+    "verify_before_save": "नोंदवण्यापूर्वी तपासा आणि खात्री करा",
+    "smart_alerts": {
+      "critical": "गंभीर धोका (Critical)",
+      "urgent": "तातडीने पुनरावलोकन आवश्यक",
+      "followup": "पुढील तपासणी वेळ",
+      "stable": "स्थिर प्रकृती"
+    }
+  },
+  "rural": {
+    "todays_work": "आजचे कार्य",
+    "home_visits": "घरोघरी भेटी",
+    "vaccinations": "लसीकरण बाकी",
+    "keypad_sms": "कीपॅड फोनवर एसएमएस पाठवा",
+    "family_graph": "कौटुंबिक आरोग्य आलेख",
+    "village_intel": "ग्राम आरोग्य माहिती"
+  }
+}

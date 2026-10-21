@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani - Village Health & Population Intelligence Dashboard</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sanjeevani">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    :root {
+      --primary: #087E8B;
+      --secondary: #1976D2;
+      --accent: #38B2AC;
+      --bg: #F5FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #102A43;
+      --text-secondary: #627D98;
+      --border: #D9E2EC;
+      --border-light: #EBF0F5;
+      --success: #2E7D32;
+      --warning: #F9A825;
+      --danger: #D32F2F;
+    }
+
+    body {
+      background: #F5FAFC;
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      padding: 20px 28px;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px 12px 64px 12px !important;
+      }
+      .top-nav {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+      }
+      .top-nav-links {
+        width: 100% !important;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .village-toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+      .village-select-box {
+        min-width: 100% !important;
+        width: 100% !important;
+      }
+      .custom-select {
+        max-width: 100% !important;
+      }
+    }
+
+    @media (max-width: 375px) {
+      body {
+        padding: 8px 8px 64px 8px !important;
+      }
+    }
+
+    /* Top Nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      background: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 6px rgba(16, 42, 67, 0.04);
+    }
+
+    .top-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Village Selector Toolbar */
+    .village-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: #FFFFFF;
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(16, 42, 67, 0.05);
+      margin-bottom: 22px;
+    }
+
+    .village-select-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .custom-select {
+      background: #F8FBFC;
+      border: 1.5px solid var(--primary);
+      color: #102A43;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 9px 14px;
+      border-radius: 8px;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Village Hero Banner */
+    .village-banner {
+      background: linear-gradient(135deg, #0B1F33 0%, #087E8B 100%);
+      color: #FFFFFF;
+      padding: 28px 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(8, 126, 139, 0.18);
+    }
+
+    .village-banner h1 {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.3px;
+    }
+
+    .village-meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .meta-pill {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #E2E8F0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* KPI Grid */
+    .kpi-grid-6 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .kpi-box {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(16, 42, 67, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .kpi-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 42, 67, 0.08);
+    }
+
+    .kpi-box .kpi-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-box .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .kpi-box .kpi-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Family Section */
+    .section-card {
+      background: #FFFFFF;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(16, 42, 67, 0.04);
+      padding: 22px 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--border-light);
+    }
+
+    .family-card {
+      background: #FAFCFD;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .family-card:hover {
+      border-color: var(--primary);
+    }
+
+    .family-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .family-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .member-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+      background: #FFFFFF;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .member-table th {
+      background: #EDF2F7;
+      color: #334E68;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    .member-table td {
+      padding: 8px 12px;
+      border-top: 1px solid var(--border-light);
+      color: #243B53;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(11, 31, 51, 0.65);
+      backdrop-filter: blur(3px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: #FFFFFF;
+      border-radius: 16px;
+      max-width: 780px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 16px 40px rgba(11, 31, 51, 0.25);
+      border: 1px solid var(--border);
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      background: #0B1F33;
+      color: #FFFFFF;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 22px 24px;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .member-row-item {
+      background: #F8FBFC;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    /* Notification Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #087E8B;
+      color: #FFFFFF;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      z-index: 2000;
+      animation: slideInRight 0.25s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <!-- Top Action Navigation -->
+    <div class="top-nav">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:22px;">🏘️</span>
+        <div>
+          <strong style="font-size:16px; color:#0B1F33;">Sanjeevani Village Health & Census Portal</strong>
+          <div style="font-size:11.5px; color:var(--text-secondary);">Rural Community Health, Outbreak Surveillance & Family Census Graph</div>
+        </div>
+      </div>
+      <div class="top-nav-links">
+        <a href="/login" class="btn btn-outline btn-sm">← Back to Login / Home</a>
+        <a href="/doctor" class="btn btn-primary btn-sm">🩺 Doctor Portal</a>
+        <a href="/asha" class="btn btn-secondary btn-sm">👩⚕️ ASHA Portal</a>
+        <a href="/hospital" class="btn btn-outline btn-sm">🏥 Hospital Portal</a>
+        <a href="/keypad" class="btn btn-outline btn-sm">📱 Keypad Sim</a>
+      </div>
+    </div>
+
+    <!-- VILLAGE SELECTOR & REGISTRATION TOOLBAR -->
+    <div class="village-toolbar">
+      <div class="village-select-box">
+        <label for="village-select" style="font-size:13px; font-weight:700; color:#334E68; white-space:nowrap;">
+          📍 Active Village:
+        </label>
+        <select id="village-select" class="custom-select">
+          <option value="" disabled selected>Loading registered villages...</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" id="btn-open-register-village" class="btn btn-primary" style="background:#087E8B; display:flex; align-items:center; gap:6px;">
+          <span>➕</span> Register New Village
+        </button>
+        <button type="button" id="btn-open-register-family" class="btn btn-secondary" style="display:flex; align-items:center; gap:6px;">
+          <span>👨‍👩‍👧‍👦</span> Register Family & Members
+        </button>
+      </div>
+    </div>
+
+    <!-- VILLAGE HEADER HERO BANNER -->
+    <div class="village-banner">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+        <div style="max-width:700px;">
+          <span class="badge" style="background:rgba(56, 178, 172, 0.35); color:#E6FFFA; margin-bottom:8px; font-weight:700;">
+            🏛️ RURAL PRIMARY HEALTH & CENSUS UNIT
+          </span>
+          <h1 id="banner-village-name">Loading Village...</h1>
+          <p id="banner-village-sub" style="font-size:13px; color:#BCCCDC; margin:4px 0 0 0; line-height:1.5;">
+            District & Taluka Details...
+          </p>
+
+          <div class="village-meta-pills" id="banner-pills-container">
+            <span class="meta-pill" id="pill-gram-panchayat">🏛️ Gram Panchayat: --</span>
+            <span class="meta-pill" id="pill-phc">🏥 PHC Sub-Centre: --</span>
+            <span class="meta-pill" id="pill-asha">👩⚕️ ASHA: --</span>
+            <span class="meta-pill" id="pill-water">💧 Water: --</span>
+            <span class="meta-pill" id="pill-sanitation">🚽 Sanitation: --%</span>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.12); padding:12px 18px; border-radius:12px; font-size:12px; border:1px solid rgba(255,255,255,0.22); max-width:280px;">
+          🔒 <strong>Privacy & Public Display Mode:</strong><br>
+          Non-PII aggregated health metrics shown on community dashboard. Individual health files encrypted under NDHM standards.
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE CENSUS & HEALTH INTELLIGENCE KPI GRID (6 METRICS) -->
+    <div class="kpi-grid-6">
+      <div class="kpi-box">
+        <div class="kpi-label">🏠 Monitored Families</div>
+        <div class="kpi-val" id="val-total-families">--</div>
+        <div class="kpi-sub">Households registered</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">👥 Total Village Population</div>
+        <div class="kpi-val" id="val-total-population" style="color:var(--primary);">--</div>
+        <div class="kpi-sub">Individually registered people</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">📊 Avg Family Size</div>
+        <div class="kpi-val" id="val-avg-family-size">--</div>
+        <div class="kpi-sub">People per household</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">🤰 Active Maternal ANC</div>
+        <div class="kpi-val" id="val-anc-mothers" style="color:#D97706;">--</div>
+        <div class="kpi-sub">High-risk pregnant mothers</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">💉 Child Vaccination</div>
+        <div class="kpi-val" id="val-vaccine-rate" style="color:var(--success);">--%</div>
+        <div class="kpi-sub">Pentavalent / DPT-3</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">🚨 High-Priority Surveillance</div>
+        <div class="kpi-val" id="val-high-priority" style="color:var(--danger);">--</div>
+        <div class="kpi-sub">Chronic & acute monitoring</div>
+      </div>
+    </div>
+
+    <!-- FAMILY HEALTH & POPULATION REGISTRY SECTION -->
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; color:#102A43; display:flex; align-items:center; gap:8px;">
+            <span>👨‍👩‍👧‍👦</span> Family Health & Population Registry
+          </h2>
+          <div style="font-size:12.5px; color:var(--text-secondary);">
+            Registered families and individual family members in this village. Every individual person contributes to the live census count.
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="family-search-input" placeholder="🔍 Search by Head Name, Household ID, Phone..." 
+                 style="padding:8px 14px; border:1px solid var(--border); border-radius:8px; font-size:13px; width:270px; outline:none;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-trigger-register-family">
+            ➕ Register New Family
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Families Container -->
+      <div id="families-container">
+        <div style="text-align:center; padding:32px; color:var(--text-secondary);">
+          Loading registered families and individual members...
+        </div>
+      </div>
+    </div>
+
+    <!-- SYMPTOM OUTBREAK TRENDS & MATERNAL CARE OVERVIEW -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px;">
+      <!-- Common Reported Symptoms in Village -->
+      <div class="section-card" style="margin-bottom:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <strong style="font-size:15px; color:#102A43;">📊 Community Symptom Surveillance</strong>
+          <span class="badge badge-info">Epidemiological Triage</span>
+        </div>
+        <div id="symptoms-list-container">
+          Loading community symptoms...
+        </div>
+      </div>
+
+      <!-- Maternal & Child Immunization Progress -->
+      <div class="section-card" style="margin-bottom:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <strong style="font-size:15px; color:#102A43;">👶 Maternal & Child Health Coverage</strong>
+          <span class="badge badge-success">ASHA Monitored</span>
+        </div>
+        <div style="font-size:13.5px; line-height:1.9; color:var(--text-main);">
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding:6px 0;">
+            <span>Pentavalent / DPT-3 Full Course:</span>
+            <strong style="color:var(--success);">94.2% (On Track)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding:6px 0;">
+            <span>Maternal Iron-Folic Acid (IFA) Distribution:</span>
+            <strong>98% (Completed)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding:6px 0;">
+            <span>Institutional Delivery Preparedness:</span>
+            <strong style="color:var(--primary);">100% (Sub-Centre Ready)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:6px 0;">
+            <span>Drinking Water Chlorination & Testing:</span>
+            <strong style="color:var(--success);">Safe (Tested Weekly)</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End container -->
+
+  <!-- ==================== MODAL 1: REGISTER NEW VILLAGE ==================== -->
+  <div class="modal-overlay" id="modal-register-village">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><span>🏛️</span> Register New Village</h3>
+        <button type="button" class="close-btn" id="close-modal-village">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-register-village">
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:16px;">
+            Add a new rural health cluster to the Sanjeevani registry. Once registered, you can immediately begin recording individual families and their family members.
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Village Name *</label>
+              <input type="text" class="form-control" name="village_name" required placeholder="e.g. Khandala Khurd or Rampur">
+            </div>
+            <div class="form-group">
+              <label class="form-label">District *</label>
+              <input type="text" class="form-control" name="district" required placeholder="e.g. Raigad, Pune, Satara">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Taluka / Block</label>
+              <input type="text" class="form-control" name="taluka" placeholder="e.g. Alibag, Haveli, Pen">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gram Panchayat Name</label>
+              <input type="text" class="form-control" name="gram_panchayat" placeholder="e.g. Rampur Gram Panchayat">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">PHC / Sub-Centre Unit</label>
+              <input type="text" class="form-control" name="phc_subcentre" placeholder="e.g. Alibag Rural PHC">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned ASHA Worker & Phone</label>
+              <input type="text" class="form-control" name="asha_worker_name" placeholder="e.g. Sunita Kadam (+91 98205 11223)">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Estimated Target Population</label>
+              <input type="number" class="form-control" name="target_population" value="1000" min="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Water Supply Source</label>
+              <select class="form-control" name="water_supply_type">
+                <option value="Piped & Community Borewell">Piped & Community Borewell</option>
+                <option value="Gramin Jal Mission Tap Water">Gramin Jal Mission Tap Water</option>
+                <option value="Handpump & Protected Well">Handpump & Protected Well</option>
+                <option value="Water Tanker Supply">Water Tanker Supply</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Sanitation / Toilet Coverage (%)</label>
+            <input type="number" class="form-control" name="sanitation_coverage_percent" value="85" min="0" max="100">
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+            <button type="button" class="btn btn-outline" id="btn-cancel-village">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-village" style="background:#087E8B;">
+              🏛️ Register Village & Proceed →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: REGISTER NEW FAMILY & INDIVIDUAL MEMBERS ==================== -->
+  <div class="modal-overlay" id="modal-register-family">
+    <div class="modal-content" style="max-width:850px;">
+      <div class="modal-header">
+        <h3><span>👨‍👩‍👧‍👦</span> Register Family & Individual Members</h3>
+        <button type="button" class="close-btn" id="close-modal-family">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-register-family">
+          
+          <!-- Village context badge -->
+          <div style="background:#EBF8FA; border:1px solid #BEE3F8; padding:10px 14px; border-radius:8px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:12px; color:#2B6CB0; font-weight:700;">REGISTERING IN VILLAGE:</span>
+              <strong id="modal-family-village-name" style="color:#1A365D; margin-left:6px; font-size:14px;">Shivaji Nagar</strong>
+            </div>
+            <span class="badge badge-info" id="badge-total-members-count">👥 1 Person in Family</span>
+          </div>
+
+          <!-- Section A: Household Overview -->
+          <div style="font-size:14px; font-weight:700; color:#102A43; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+            <span>🏠</span> 1. Household / Family Overview
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Head of Family Full Name *</label>
+              <input type="text" class="form-control" id="f-head-name" required placeholder="e.g. Ramesh Narayan Sharma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Primary Mobile Phone Number</label>
+              <input type="tel" class="form-control" id="f-phone" placeholder="e.g. +91 98765 43210">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">House Number / Ward / Galli *</label>
+              <input type="text" class="form-control" id="f-address" required placeholder="e.g. House 14, Main Gaon Galli, Near School">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ration Card Type</label>
+              <select class="form-control" id="f-ration-card">
+                <option value="BPL">BPL (Below Poverty Line - Yellow)</option>
+                <option value="AAY">AAY (Antyodaya Anna Yojana)</option>
+                <option value="APL">APL (Above Poverty Line - Saffron)</option>
+                <option value="None">None / General</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Water Source</label>
+              <select class="form-control" id="f-water-source">
+                <option value="Piped Water Tap">Piped Water Tap</option>
+                <option value="Community Borewell">Community Borewell</option>
+                <option value="Handpump">Handpump</option>
+                <option value="Protected Well">Protected Well</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sanitation / Toilet Facility</label>
+              <select class="form-control" id="f-toilet">
+                <option value="1">Yes (Private Individual Household Latrine)</option>
+                <option value="0">No (Community Facility / Open Area)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Section B: Individual People in this Family -->
+          <div style="margin-top:24px; padding-top:16px; border-top:1.5px solid var(--border-light);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <div style="font-size:14px; font-weight:700; color:#102A43; display:flex; align-items:center; gap:6px;">
+                  <span>👥</span> 2. Individual People in this Family (Census Count)
+                </div>
+                <div style="font-size:11.5px; color:var(--text-secondary);">
+                  Add each individual person (Head, spouse, children, grandparents). Every person added directly increments the village population count.
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-add-member-row" style="color:var(--primary); border-color:var(--primary); font-weight:700;">
+                ➕ Add Another Family Member
+              </button>
+            </div>
+
+            <!-- Dynamic Member Rows Container -->
+            <div id="member-rows-container">
+              <!-- Member Row 1 (Pre-filled as Head) -->
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-light);">
+            <button type="button" class="btn btn-outline" id="btn-cancel-family">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-family" style="background:#087E8B; padding:10px 20px; font-size:14px; font-weight:700;">
+              💾 Save & Register Family (<span id="submit-btn-count">1</span> People) →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: ADD MEMBER TO EXISTING FAMILY ==================== -->
+  <div class="modal-overlay" id="modal-add-member">
+    <div class="modal-content" style="max-width:550px;">
+      <div class="modal-header">
+        <h3><span>➕</span> Add Person to Existing Family</h3>
+        <button type="button" class="close-btn" id="close-modal-single-member">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-single-member">
+          <input type="hidden" id="single-m-household-id">
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:14px;">
+            Add an individual person (e.g. newborn child, new spouse, or elder) to family: <strong id="single-m-family-label" style="color:var(--primary);"></strong>
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Person Full Name *</label>
+            <input type="text" class="form-control" id="single-m-name" required placeholder="e.g. Sunita Sharma">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Age *</label>
+              <input type="number" class="form-control" id="single-m-age" required min="0" max="120" placeholder="e.g. 24">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender *</label>
+              <select class="form-control" id="single-m-gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Relation to Family Head *</label>
+              <select class="form-control" id="single-m-relation">
+                <option value="Spouse">Spouse (Wife / Husband)</option>
+                <option value="Child">Child (Son / Daughter)</option>
+                <option value="Father">Father</option>
+                <option value="Mother">Mother</option>
+                <option value="Grandparent">Grandparent</option>
+                <option value="Brother / Sister">Brother / Sister</option>
+                <option value="Other Relative">Other Relative</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Vaccination Status</label>
+              <select class="form-control" id="single-m-vaccine">
+                <option value="Complete">Complete (Up to date)</option>
+                <option value="Pending">Pending</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Chronic Health Condition</label>
+            <select class="form-control" id="single-m-chronic">
+              <option value="None">None (Healthy)</option>
+              <option value="Hypertension">Hypertension (High BP)</option>
+              <option value="Type 2 Diabetes">Type 2 Diabetes</option>
+              <option value="Bronchial Asthma">Bronchial Asthma / Respiratory</option>
+              <option value="Severe Anemia">Severe Anemia</option>
+              <option value="Heart Disease">Heart Disease</option>
+              <option value="Underweight (SAM screening due)">Underweight / Malnutrition</option>
+            </select>
+          </div>
+
+          <div style="background:#F8FBFC; padding:10px 14px; border-radius:8px; border:1px solid var(--border-light); margin-bottom:16px; display:flex; gap:16px;">
+            <label style="font-size:12.5px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="single-m-anc"> 🤰 Pregnant Mother (ANC)
+            </label>
+            <label style="font-size:12.5px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="single-m-priority"> 🚨 High Priority Surveillance
+            </label>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button type="button" class="btn btn-outline" id="btn-cancel-single-member">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="background:#087E8B;">
+              ➕ Add Person to Family
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-msg" id="toast-notification"></div>
+
+  <!-- JavaScript Module -->
+  <script type="module">
+    import { apiRequest } from '/js/api.js';
+
+    let currentVillages = [];
+    let selectedVillageId = '';
+    let currentFamilies = [];
+
+    // Helper: Toast notification
+    function showToast(msg) {
+      const t = document.getElementById('toast-notification');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => {
+        t.style.display = 'none';
+      }, 4000);
+    }
+
+    // Load All Villages
+    async function loadVillages(preselectVillageId = null) {
+      try {
+        const villages = await apiRequest('/api/rural/villages');
+        currentVillages = villages || [];
+        const select = document.getElementById('village-select');
+        select.innerHTML = '';
+
+        if (!currentVillages.length) {
+          select.innerHTML = '<option value="">No villages found</option>';
+          return;
+        }
+
+        currentVillages.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v.village_id;
+          opt.textContent = `${v.village_name} (${v.district}) - [${v.total_families || 0} Families, ${v.total_population || 0} People]`;
+          select.appendChild(opt);
+        });
+
+        if (preselectVillageId && currentVillages.some(v => v.village_id === preselectVillageId)) {
+          selectedVillageId = preselectVillageId;
+        } else if (!selectedVillageId && currentVillages.length > 0) {
+          selectedVillageId = currentVillages[0].village_id;
+        }
+
+        select.value = selectedVillageId;
+        await refreshVillageView(selectedVillageId);
+
+      } catch (err) {
+        console.warn('Error loading villages list:', err);
+      }
+    }
+
+    // Refresh Active Village Dashboard View
+    async function refreshVillageView(villageId) {
+      if (!villageId) return;
+
+      const v = currentVillages.find(x => x.village_id === villageId) || currentVillages[0];
+      if (!v) return;
+
+      // Update Header Banner
+      document.getElementById('banner-village-name').textContent = `${v.village_name} (${v.district} District)`;
+      document.getElementById('banner-village-sub').textContent = `Taluka: ${v.taluka || 'Rural Block'} • Gram Panchayat: ${v.gram_panchayat || v.village_name} • Health Cluster: ${v.phc_subcentre || 'Primary Health Centre'}`;
+      document.getElementById('pill-gram-panchayat').textContent = `🏛️ GP: ${v.gram_panchayat || v.village_name}`;
+      document.getElementById('pill-phc').textContent = `🏥 PHC: ${v.phc_subcentre || 'Primary Health Unit'}`;
+      document.getElementById('pill-asha').textContent = `👩⚕️ ASHA: ${v.asha_worker_name || 'Community Health Worker'}`;
+      document.getElementById('pill-water').textContent = `💧 Water: ${v.water_supply_type || 'Borewell & Tap'}`;
+      document.getElementById('pill-sanitation').textContent = `🚽 Sanitation: ${v.sanitation_coverage_percent || 85}%`;
+
+      // Update Modal Context
+      document.getElementById('modal-family-village-name').textContent = `${v.village_name} (${v.village_id})`;
+
+      // Fetch Village Summary KPIs
+      try {
+        const summary = await apiRequest(`/api/rural/village-summary?village_id=${villageId}`);
+        document.getElementById('val-total-families').textContent = summary.total_registered_families ?? v.total_families ?? 0;
+        document.getElementById('val-total-population').textContent = summary.total_monitored_population ?? v.total_population ?? 0;
+        document.getElementById('val-avg-family-size').textContent = (summary.average_family_size ?? v.avg_family_size ?? 0).toFixed(1);
+        document.getElementById('val-anc-mothers').textContent = summary.active_maternal_anc_cases ?? v.active_anc_cases ?? 0;
+        document.getElementById('val-vaccine-rate').textContent = (summary.child_vaccination_coverage_percent ?? 94.2) + '%';
+        document.getElementById('val-high-priority').textContent = summary.high_priority_surveillance_cases ?? v.high_priority_cases ?? 0;
+
+        // Render Symptoms
+        const symptomsBox = document.getElementById('symptoms-list-container');
+        if (summary.common_reported_symptoms) {
+          symptomsBox.innerHTML = summary.common_reported_symptoms.map(s => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border-light);">
+              <div>
+                <strong>${s.symptom}</strong>
+                <div style="font-size:11px; color:var(--text-secondary);">${s.trend}</div>
+              </div>
+              <span class="badge badge-info" style="font-weight:700;">${s.cases} Cases</span>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.warn('Error loading village summary:', err);
+      }
+
+      // Fetch & Render Village Families & Members
+      await loadVillageFamilies(villageId);
+    }
+
+    // Load Village Families and Members
+    async function loadVillageFamilies(villageId) {
+      const container = document.getElementById('families-container');
+      try {
+        const resp = await apiRequest(`/api/rural/villages/${villageId}/families`);
+        currentFamilies = resp.families || [];
+
+        renderFamiliesList(currentFamilies);
+
+      } catch (err) {
+        console.warn('Error loading village families:', err);
+        container.innerHTML = `
+          <div style="text-align:center; padding:24px; color:var(--text-secondary);">
+            No families registered in this village yet. Click <strong>"Register Family & Members"</strong> to record the first family!
+          </div>
+        `;
+      }
+    }
+
+    // Render Families List Cards
+    function renderFamiliesList(families) {
+      const container = document.getElementById('families-container');
+      if (!families || families.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:32px; background:#F8FBFC; border:1.5px dashed var(--border); border-radius:12px;">
+            <div style="font-size:32px; margin-bottom:8px;">👨‍👩‍👧‍👦</div>
+            <h4 style="margin:0 0 4px 0; color:#102A43;">No Families Registered Yet in this Village</h4>
+            <p style="font-size:13px; color:var(--text-secondary); margin:0 0 14px 0;">
+              Register the first household and record each family member individually to build the village census.
+            </p>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-empty-add-family">
+              ➕ Register First Family & Members
+            </button>
+          </div>
+        `;
+        document.getElementById('btn-empty-add-family')?.addEventListener('click', openFamilyModal);
+        return;
+      }
+
+      container.innerHTML = families.map(f => {
+        const members = f.members || [];
+        const isHighRisk = f.high_risk_flag === 1 || members.some(m => m.high_priority === 1 || m.is_pregnant_anc === 1);
+
+        return `
+          <div class="family-card" id="fam-card-${f.household_id}">
+            <div class="family-header">
+              <div>
+                <div class="family-title">
+                  <span>🏠</span>
+                  <strong>${f.head_name}</strong>
+                  <span class="badge" style="background:#E2E8F0; color:#334E68; font-size:11px;">ID: ${f.household_id}</span>
+                  ${isHighRisk ? '<span class="badge badge-danger">🚨 High Risk Surveillance</span>' : '<span class="badge badge-success">✓ Normal Care</span>'}
+                </div>
+                <div style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">
+                  📍 ${f.address} • 📞 ${f.phone || 'No phone'} • Ration: <strong>${f.ration_card_type || 'BPL'}</strong> • Water: <strong>${f.water_source}</strong> • Toilet: <strong>${f.sanitation_toilet ? 'Private Latrine' : 'Community'}</strong>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="badge badge-info" style="font-size:12px; font-weight:700;">
+                  👥 ${members.length} People in Family
+                </span>
+                <button type="button" class="btn btn-outline btn-sm btn-add-single-person" data-hh-id="${f.household_id}" data-hh-head="${f.head_name}" style="font-size:11.5px; padding:4px 9px;">
+                  ➕ Add Person
+                </button>
+              </div>
+            </div>
+
+            <!-- Members Table -->
+            <table class="member-table">
+              <thead>
+                <tr>
+                  <th>Person Name</th>
+                  <th>Age / Gender</th>
+                  <th>Relation to Head</th>
+                  <th>Chronic Health / Conditions</th>
+                  <th>Immunization</th>
+                  <th>Special Flags</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${members.length ? members.map(m => `
+                  <tr>
+                    <td><strong>${m.name}</strong></td>
+                    <td>${m.age} yrs (${m.gender})</td>
+                    <td><span class="badge" style="background:#EDF2F7; color:#2D3748;">${m.relation}</span></td>
+                    <td>
+                      ${m.chronic_condition && m.chronic_condition !== 'None' 
+                        ? `<span style="color:#C53030; font-weight:600;">${m.chronic_condition}</span>` 
+                        : '<span style="color:var(--text-secondary);">None</span>'}
+                    </td>
+                    <td>
+                      <span class="badge ${m.immunization_status === 'Complete' ? 'badge-success' : 'badge-warning'}">
+                        ${m.immunization_status || 'Complete'}
+                      </span>
+                    </td>
+                    <td>
+                      ${m.is_pregnant_anc ? '<span class="badge badge-warning" style="margin-right:4px;">🤰 Pregnant ANC</span>' : ''}
+                      ${m.high_priority ? '<span class="badge badge-danger">🚨 High Priority</span>' : ''}
+                      ${!m.is_pregnant_anc && !m.high_priority ? '<span style="color:#A0AEC0; font-size:11px;">Standard</span>' : ''}
+                    </td>
+                  </tr>
+                `).join('') : `
+                  <tr>
+                    <td colspan="6" style="text-align:center; color:var(--text-secondary); padding:10px;">
+                      No individual members registered yet. Click "+ Add Person" above.
+                    </td>
+                  </tr>
+                `}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }).join('');
+
+      // Attach add person listeners
+      document.querySelectorAll('.btn-add-single-person').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const hhId = btn.getAttribute('data-hh-id');
+          const hhHead = btn.getAttribute('data-hh-head');
+          openSingleMemberModal(hhId, hhHead);
+        });
+      });
+    }
+
+    // Filter Families by Search
+    document.getElementById('family-search-input')?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        renderFamiliesList(currentFamilies);
+        return;
+      }
+      const filtered = currentFamilies.filter(f => 
+        (f.head_name && f.head_name.toLowerCase().includes(q)) ||
+        (f.household_id && f.household_id.toLowerCase().includes(q)) ||
+        (f.phone && f.phone.includes(q)) ||
+        (f.address && f.address.toLowerCase().includes(q)) ||
+        (f.members && f.members.some(m => m.name && m.name.toLowerCase().includes(q)))
+      );
+      renderFamiliesList(filtered);
+    });
+
+    // Village Switcher Event
+    document.getElementById('village-select')?.addEventListener('change', async (e) => {
+      selectedVillageId = e.target.value;
+      await refreshVillageView(selectedVillageId);
+    });
+
+    // ----------------- MODAL CONTROLS: VILLAGE -----------------
+    const modalVillage = document.getElementById('modal-register-village');
+    document.getElementById('btn-open-register-village')?.addEventListener('click', () => {
+      document.getElementById('form-register-village').reset();
+      modalVillage.style.display = 'flex';
+    });
+    document.getElementById('close-modal-village')?.addEventListener('click', () => {
+      modalVillage.style.display = 'none';
+    });
+    document.getElementById('btn-cancel-village')?.addEventListener('click', () => {
+      modalVillage.style.display = 'none';
+    });
+
+    // Submit New Village
+    document.getElementById('form-register-village')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const payload = {
+        village_name: formData.get('village_name').trim(),
+        district: formData.get('district').trim(),
+        taluka: formData.get('taluka') ? formData.get('taluka').trim() : 'Taluka Central',
+        gram_panchayat: formData.get('gram_panchayat') ? formData.get('gram_panchayat').trim() : 'Gram Panchayat',
+        phc_subcentre: formData.get('phc_subcentre') ? formData.get('phc_subcentre').trim() : 'Primary Health Centre',
+        asha_worker_name: formData.get('asha_worker_name') ? formData.get('asha_worker_name').trim() : 'Community ASHA Worker',
+        target_population: parseInt(formData.get('target_population')) || 1000,
+        water_supply_type: formData.get('water_supply_type'),
+        sanitation_coverage_percent: parseFloat(formData.get('sanitation_coverage_percent')) || 85.0
+      };
+
+      try {
+        const res = await apiRequest('/api/rural/villages', 'POST', payload);
+        modalVillage.style.display = 'none';
+        showToast(`✓ Village "${payload.village_name}" registered successfully!`);
+        
+        // Reload villages and select the newly registered one
+        const newVilId = res.village?.village_id;
+        await loadVillages(newVilId);
+
+        // Prompt user to register families in the new village
+        setTimeout(() => {
+          if (confirm(`Village "${payload.village_name}" is active! Would you like to register the first family and their individual members now?`)) {
+            openFamilyModal();
+          }
+        }, 400);
+
+      } catch (err) {
+        alert('Failed to register village: ' + (err.message || 'Unknown error'));
+      }
+    });
+
+    // ----------------- MODAL CONTROLS: FAMILY & DYNAMIC MEMBERS -----------------
+    const modalFamily = document.getElementById('modal-register-family');
+    let memberCounter = 0;
+
+    function openFamilyModal() {
+      document.getElementById('form-register-family').reset();
+      document.getElementById('member-rows-container').innerHTML = '';
+      memberCounter = 0;
+
+      // Add Row 1 (Default Head Member)
+      addMemberRow('Head / Self', true);
+      updateTotalMemberCount();
+
+      modalFamily.style.display = 'flex';
+    }
+
+    document.getElementById('btn-open-register-family')?.addEventListener('click', openFamilyModal);
+    document.getElementById('btn-trigger-register-family')?.addEventListener('click', openFamilyModal);
+    document.getElementById('close-modal-family')?.addEventListener('click', () => {
+      modalFamily.style.display = 'none';
+    });
+    document.getElementById('btn-cancel-family')?.addEventListener('click', () => {
+      modalFamily.style.display = 'none';
+    });
+
+    // Sync Head Name input to Member 1 Name
+    document.getElementById('f-head-name')?.addEventListener('input', (e) => {
+      const row1Name = document.querySelector('.m-name-input-0');
+      if (row1Name && (!row1Name.dataset.manuallyEdited || row1Name.dataset.manuallyEdited === 'false')) {
+        row1Name.value = e.target.value;
+      }
+    });
+
+    // Add Dynamic Member Row Function
+    function addMemberRow(defaultRelation = 'Child', isHead = false) {
+      const idx = memberCounter++;
+      const container = document.getElementById('member-rows-container');
+
+      const div = document.createElement('div');
+      div.className = 'member-row-item';
+      div.id = `member-row-${idx}`;
+
+      div.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:13px; color:#2B6CB0;">
+            👤 Person ${idx + 1} ${isHead ? '(Head of Family)' : ''}
+          </strong>
+          ${!isHead ? `
+            <button type="button" class="btn btn-outline btn-sm btn-remove-row" data-row-idx="${idx}" style="color:#E53E3E; border-color:#FED7D7; padding:2px 8px; font-size:11px;">
+              ✕ Remove
+            </button>
+          ` : '<span style="font-size:11px; color:#718096;">Required Head</span>'}
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Full Name *</label>
+            <input type="text" class="form-control m-name-input ${isHead ? 'm-name-input-0' : ''}" required placeholder="Name of person">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Age *</label>
+            <input type="number" class="form-control m-age-input" required min="0" max="120" value="${isHead ? 42 : 16}">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Gender *</label>
+            <select class="form-control m-gender-input">
+              <option value="Male" ${isHead ? 'selected' : ''}>Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Relation to Head *</label>
+            <select class="form-control m-relation-input">
+              <option value="Head / Self" ${isHead ? 'selected' : ''}>Head / Self</option>
+              <option value="Spouse (Wife/Husband)" ${defaultRelation.includes('Spouse') ? 'selected' : ''}>Spouse (Wife/Husband)</option>
+              <option value="Son" ${defaultRelation.includes('Son') ? 'selected' : ''}>Son</option>
+              <option value="Daughter" ${defaultRelation.includes('Daughter') ? 'selected' : ''}>Daughter</option>
+              <option value="Child" ${defaultRelation === 'Child' ? 'selected' : ''}>Child</option>
+              <option value="Father">Father</option>
+              <option value="Mother">Mother</option>
+              <option value="Grandparent">Grandparent</option>
+              <option value="Relative / Other">Relative / Other</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Chronic Condition</label>
+            <select class="form-control m-chronic-input">
+              <option value="None">None (Healthy)</option>
+              <option value="Hypertension">Hypertension (High BP)</option>
+              <option value="Type 2 Diabetes">Type 2 Diabetes</option>
+              <option value="Bronchial Asthma">Bronchial Asthma</option>
+              <option value="Severe Anemia">Severe Anemia</option>
+              <option value="Heart Disease">Heart Disease</option>
+              <option value="Underweight (SAM screening due)">Underweight / Malnutrition</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11.5px;">Vaccination Status</label>
+            <select class="form-control m-vaccine-input">
+              <option value="Complete">Complete</option>
+              <option value="Pending">Pending</option>
+              <option value="Overdue">Overdue</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:8px; display:flex; gap:16px;">
+          <label style="font-size:12px; display:flex; align-items:center; gap:5px; cursor:pointer;">
+            <input type="checkbox" class="m-anc-input"> 🤰 Pregnant Mother (ANC)
+          </label>
+          <label style="font-size:12px; display:flex; align-items:center; gap:5px; cursor:pointer;">
+            <input type="checkbox" class="m-priority-input"> 🚨 High Priority Surveillance
+          </label>
+        </div>
+      `;
+
+      container.appendChild(div);
+
+      // Pre-fill head name if available
+      if (isHead) {
+        const headVal = document.getElementById('f-head-name').value;
+        if (headVal) {
+          div.querySelector('.m-name-input-0').value = headVal;
+        }
+      }
+
+      div.querySelector('.m-name-input')?.addEventListener('input', () => {
+        if (isHead) {
+          div.querySelector('.m-name-input-0').dataset.manuallyEdited = 'true';
+        }
+      });
+
+      div.querySelector('.btn-remove-row')?.addEventListener('click', () => {
+        div.remove();
+        updateTotalMemberCount();
+      });
+
+      updateTotalMemberCount();
+    }
+
+    function updateTotalMemberCount() {
+      const rows = document.querySelectorAll('.member-row-item');
+      const count = rows.length;
+      document.getElementById('badge-total-members-count').textContent = `👥 ${count} ${count === 1 ? 'Person' : 'People'} in Family`;
+      document.getElementById('submit-btn-count').textContent = count;
+    }
+
+    document.getElementById('btn-add-member-row')?.addEventListener('click', () => {
+      const existingRows = document.querySelectorAll('.member-row-item').length;
+      let nextRelation = 'Child';
+      if (existingRows === 1) nextRelation = 'Spouse (Wife/Husband)';
+      else if (existingRows === 2) nextRelation = 'Child';
+      addMemberRow(nextRelation, false);
+    });
+
+    // Submit New Family & Members
+    document.getElementById('form-register-family')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const headName = document.getElementById('f-head-name').value.trim();
+      const phone = document.getElementById('f-phone').value.trim() || '+91 98000 00000';
+      const address = document.getElementById('f-address').value.trim();
+      const rationCard = document.getElementById('f-ration-card').value;
+      const waterSource = document.getElementById('f-water-source').value;
+      const toilet = parseInt(document.getElementById('f-toilet').value) || 1;
+
+      // Extract all individual member rows
+      const rows = document.querySelectorAll('.member-row-item');
+      const members = [];
+
+      rows.forEach(r => {
+        const name = r.querySelector('.m-name-input').value.trim();
+        const age = parseInt(r.querySelector('.m-age-input').value) || 30;
+        const gender = r.querySelector('.m-gender-input').value;
+        const relation = r.querySelector('.m-relation-input').value;
+        const chronic = r.querySelector('.m-chronic-input').value;
+        const vaccine = r.querySelector('.m-vaccine-input').value;
+        const anc = r.querySelector('.m-anc-input').checked ? 1 : 0;
+        const priority = r.querySelector('.m-priority-input').checked ? 1 : 0;
+
+        if (name) {
+          members.push({
+            name,
+            age,
+            gender,
+            relation,
+            chronic_condition: chronic,
+            immunization_status: vaccine,
+            is_pregnant_anc: anc,
+            high_priority: priority
+          });
+        }
+      });
+
+      if (!members.length) {
+        alert('Please specify at least 1 person in the family.');
+        return;
+      }
+
+      const payload = {
+        head_name: headName,
+        phone,
+        address,
+        ration_card_type: rationCard,
+        water_source: waterSource,
+        sanitation_toilet: toilet,
+        members
+      };
+
+      try {
+        const res = await apiRequest(`/api/rural/villages/${selectedVillageId}/families`, 'POST', payload);
+        modalFamily.style.display = 'none';
+        showToast(`✓ Family of ${headName} registered with ${members.length} people!`);
+
+        // Refresh village view and live census KPIs
+        await refreshVillageView(selectedVillageId);
+
+      } catch (err) {
+        alert('Failed to register family: ' + (err.message || 'Unknown error'));
+      }
+    });
+
+    // ----------------- MODAL CONTROLS: SINGLE MEMBER ADD TO EXISTING FAMILY -----------------
+    const modalSingleMember = document.getElementById('modal-add-member');
+    function openSingleMemberModal(hhId, hhHead) {
+      document.getElementById('single-m-household-id').value = hhId;
+      document.getElementById('single-m-family-label').textContent = `${hhHead} (${hhId})`;
+      document.getElementById('single-m-name').value = '';
+      document.getElementById('single-m-age').value = '';
+      document.getElementById('single-m-anc').checked = false;
+      document.getElementById('single-m-priority').checked = false;
+      modalSingleMember.style.display = 'flex';
+    }
+
+    document.getElementById('close-modal-single-member')?.addEventListener('click', () => {
+      modalSingleMember.style.display = 'none';
+    });
+    document.getElementById('btn-cancel-single-member')?.addEventListener('click', () => {
+      modalSingleMember.style.display = 'none';
+    });
+
+    document.getElementById('form-add-single-member')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const hhId = document.getElementById('single-m-household-id').value;
+      const name = document.getElementById('single-m-name').value.trim();
+      const age = parseInt(document.getElementById('single-m-age').value) || 1;
+      const gender = document.getElementById('single-m-gender').value;
+      const relation = document.getElementById('single-m-relation').value;
+      const chronic = document.getElementById('single-m-chronic').value;
+      const vaccine = document.getElementById('single-m-vaccine').value;
+      const anc = document.getElementById('single-m-anc').checked ? 1 : 0;
+      const priority = document.getElementById('single-m-priority').checked ? 1 : 0;
+
+      const payload = {
+        name,
+        age,
+        gender,
+        relation,
+        chronic_condition: chronic,
+        immunization_status: vaccine,
+        is_pregnant_anc: anc,
+        high_priority: priority
+      };
+
+      try {
+        await apiRequest(`/api/rural/households/${hhId}/members`, 'POST', payload);
+        modalSingleMember.style.display = 'none';
+        showToast(`✓ Person ${name} added to family ${hhId}!`);
+
+        // Refresh village view
+        await refreshVillageView(selectedVillageId);
+      } catch (err) {
+        alert('Failed to add person: ' + (err.message || 'Unknown error'));
+      }
+    });
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadVillages();
+    });
+  </script>
+
+  <!-- Service Worker Registration for Multi-Day Offline Access -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then((reg) => console.log('✓ Sanjeevani Offline Service Worker Active:', reg.scope))
+          .catch((err) => console.warn('Service worker note:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>

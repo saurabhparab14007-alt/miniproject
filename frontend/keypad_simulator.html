@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani - Rural Keypad Phone SMS & Call Simulator</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sanjeevani">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      background: #0B1F33;
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .sim-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 980px;
+      width: 100%;
+    }
+
+    /* Classic Keypad Phone Body */
+    .feature-phone-body {
+      width: 280px;
+      background: #1E293B;
+      border: 4px solid #334155;
+      border-radius: 36px;
+      padding: 22px 18px 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .phone-antenna {
+      position: absolute;
+      top: -24px;
+      left: 36px;
+      width: 16px;
+      height: 26px;
+      background: #334155;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .earpiece {
+      width: 60px;
+      height: 6px;
+      background: #0B1F33;
+      border-radius: 4px;
+      margin: 0 auto 14px;
+    }
+
+    /* Retro Monochrome / Green LCD Screen */
+    .lcd-screen {
+      background: #A3E635; /* Classic retro green tint */
+      color: #0F172A;
+      border: 4px solid #0F172A;
+      border-radius: 10px;
+      height: 190px;
+      padding: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lcd-status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      border-bottom: 1px dashed #0F172A;
+      padding-bottom: 3px;
+      margin-bottom: 6px;
+    }
+
+    .lcd-content-area {
+      flex: 1;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .lcd-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      border-top: 1px dashed #0F172A;
+      padding-top: 3px;
+      margin-top: 4px;
+    }
+
+    /* Keypad Grid */
+    .phone-controls {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 6px 12px;
+    }
+
+    .btn-key-ctrl {
+      background: #334155;
+      color: #FFFFFF;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-key-ctrl.call { background: #16A34A; border-color: #22C55E; }
+    .btn-key-ctrl.end { background: #DC2626; border-color: #EF4444; }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 6px;
+    }
+
+    .key-btn {
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 12px;
+      padding: 10px 4px;
+      text-align: center;
+      color: #F8FAFC;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+    .key-btn:active { background: #087E8B; }
+
+    .key-num { font-size: 16px; font-weight: 800; display: block; }
+    .key-letters { font-size: 9px; color: #94A3B8; text-transform: uppercase; }
+
+    /* Controls Panel on Right */
+    .sim-panel {
+      max-width: 460px;
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .sim-panel h2 {
+      font-size: 20px;
+      color: #38B2AC;
+      margin-bottom: 6px;
+    }
+
+    .sim-panel p {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-bottom: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sim-wrapper">
+    <!-- RETRO FEATURE / KEYPAD PHONE SIMULATOR -->
+    <div class="feature-phone-body">
+      <div class="phone-antenna"></div>
+      <div class="earpiece"></div>
+
+      <!-- LCD SCREEN -->
+      <div class="lcd-screen" id="phone-lcd">
+        <div class="lcd-status-bar">
+          <span>📶 2G AIRTEL</span>
+          <span id="lcd-clock">10:45 AM</span>
+          <span>🔋 85%</span>
+        </div>
+
+        <div class="lcd-content-area" id="lcd-screen-text">
+          <div style="text-align:center; padding-top:16px;">
+            <div>📨 NOVO SMS INBOX</div>
+            <div style="font-size:11px; margin-top:8px;">1 New Message From PHC Clinic</div>
+            <div style="font-size:10px; margin-top:14px; opacity:0.8;">Press [Options] to Read</div>
+          </div>
+        </div>
+
+        <div class="lcd-bottom-bar">
+          <span id="lcd-left-soft">Options</span>
+          <span id="lcd-right-soft">Back</span>
+        </div>
+      </div>
+
+      <!-- CALL / END KEYS -->
+      <div class="phone-controls">
+        <button class="btn-key-ctrl call" id="btn-phone-call">📞 CALL</button>
+        <button class="btn-key-ctrl end" id="btn-phone-end">🔴 END</button>
+      </div>
+
+      <!-- 12-KEY NUMBER PAD -->
+      <div class="keypad-grid">
+        <div class="key-btn" data-key="1"><span class="key-num">1</span><span class="key-letters">. , !</span></div>
+        <div class="key-btn" data-key="2"><span class="key-num">2</span><span class="key-letters">ABC</span></div>
+        <div class="key-btn" data-key="3"><span class="key-num">3</span><span class="key-letters">DEF</span></div>
+        <div class="key-btn" data-key="4"><span class="key-num">4</span><span class="key-letters">GHI</span></div>
+        <div class="key-btn" data-key="5"><span class="key-num">5</span><span class="key-letters">JKL</span></div>
+        <div class="key-btn" data-key="6"><span class="key-num">6</span><span class="key-letters">MNO</span></div>
+        <div class="key-btn" data-key="7"><span class="key-num">7</span><span class="key-letters">PQRS</span></div>
+        <div class="key-btn" data-key="8"><span class="key-num">8</span><span class="key-letters">TUV</span></div>
+        <div class="key-btn" data-key="9"><span class="key-num">9</span><span class="key-letters">WXYZ</span></div>
+        <div class="key-btn" data-key="*"><span class="key-num">*</span><span class="key-letters">a/A</span></div>
+        <div class="key-btn" data-key="0"><span class="key-num">0</span><span class="key-letters">+ _</span></div>
+        <div class="key-btn" data-key="#"><span class="key-num">#</span><span class="key-letters">SPACE</span></div>
+      </div>
+    </div>
+
+    <!-- CONTROL PANEL TO DISPATCH AND TEST SMS / CALLS -->
+    <div class="sim-panel">
+      <h2>📡 Rural Keypad SMS & Call Engine</h2>
+      <p>Simulates delivering 160-char SMS messages and automated IVR voice alerts to basic button/feature phones in rural Indian villages without internet.</p>
+
+      <div style="background:#0B1F33; border:1px solid #334155; border-radius:10px; padding:16px; margin-bottom:16px;">
+        <label class="form-label" style="color:#E2E8F0;">Send Instant SMS to Keypad Phone:</label>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn btn-outline btn-sm test-sms-trigger" data-type="med_reminder" data-lang="hi" style="text-align:left; color:#fff;">
+            💬 दवा स्मरण (Hindi Pill Reminder): 8 PM Foracort Inhaler
+          </button>
+          <button class="btn btn-outline btn-sm test-sms-trigger" data-type="missed_visit" data-lang="mr" style="text-align:left; color:#fff;">
+            💬 डॉक्टर तपासणी सूचना (Marathi Missed Follow-up Notice)
+          </button>
+          <button class="btn btn-outline btn-sm test-sms-trigger" data-type="asha_visit" data-lang="hi" style="text-align:left; color:#fff;">
+            💬 आशा गृह भ्रमण (Hindi ASHA Home Visit Alert)
+          </button>
+        </div>
+      </div>
+
+      <div style="background:#0B1F33; border:1px solid #334155; border-radius:10px; padding:16px; margin-bottom:16px;">
+        <label class="form-label" style="color:#E2E8F0;">Trigger Automated IVR Voice Call:</label>
+        <button class="btn btn-primary btn-sm" id="btn-trigger-test-call" style="width:100%; padding:10px;">
+          📞 Simular Incoming Call with Hindi Audio Speech
+        </button>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <a href="/doctor" class="btn btn-outline btn-sm" style="color:#38B2AC; border-color:#38B2AC;">🩺 Back to Doctor Portal</a>
+        <a href="/asha" class="btn btn-outline btn-sm" style="color:#38B2AC; border-color:#38B2AC;">👩⚕️ ASHA Worker Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/keypad_sim.js"></script>
+
+  <script>
+    // Register Resilient Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then((reg) => {
+            console.log('✓ Sanjeevani Offline Service Worker Active:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('Service Worker registration note:', err);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "app_name": "संजीवनी",
+  "app_tagline": "ग्रामीण स्वास्थ्य एवं रोगी केस प्रबंधन प्रणाली",
+  "auth": {
+    "login_tab": "लॉग इन",
+    "signup_tab": "साइन अप / नया पंजीकरण",
+    "role_patient": "रोगी (Patient)",
+    "role_doctor": "डॉक्टर / अस्पताल",
+    "role_asha": "आशा स्वास्थ्य कार्यकर्ता (ASHA Worker)",
+    "email_or_id": "ईमेल या पेशेंट आईडी",
+    "password": "पासवर्ड",
+    "remember_me": "मुझे याद रखें",
+    "forgot_password": "पासवर्ड भूल गए?",
+    "full_name": "पूरा नाम",
+    "dob": "जन्म तिथि",
+    "phone": "मोबाइल नंबर",
+    "institution_name": "अस्पताल का नाम",
+    "medical_license": "मेडिकल लाइसेंस नंबर (NMC/MCI)",
+    "department": "विभाग / विशेषज्ञता",
+    "aadhaar_label": "12-अंकों का आधार कार्ड नंबर"
+  },
+  "clinical": {
+    "chief_complaint": "मुख्य शिकायत",
+    "duration": "अवधि",
+    "symptoms": "संबंधित लक्षण",
+    "diagnosis": "निदान",
+    "treatment": "उपचार योजना",
+    "allergies": "दवा एलर्जी",
+    "vitals": "शारीरिक लक्षण (Vitals)",
+    "verify_before_save": "रिकॉर्ड में सहेजने से पहले सत्यापित करें",
+    "smart_alerts": {
+      "critical": "गंभीर जोखिम (Critical)",
+      "urgent": "तत्काल समीक्षा (Urgent)",
+      "followup": "फॉलो-अप देय",
+      "stable": "स्थिर स्थिति"
+    }
+  },
+  "rural": {
+    "todays_work": "आज का कार्य",
+    "home_visits": "गृह भ्रमण (Home Visits)",
+    "vaccinations": "टीकाकरण (Vaccination)",
+    "keypad_sms": "कीपैड फोन पर एसएमएस भेजें",
+    "family_graph": "पारिवारिक स्वास्थ्य ग्राफ",
+    "village_intel": "ग्राम स्वास्थ्य निगरानी"
+  }
+}
